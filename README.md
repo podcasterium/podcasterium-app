@@ -32,6 +32,7 @@ Everything persisted in this repository is in English — see `CLAUDE.md`.
 | 05 | [Store launch](docs/05-store-launch.md) | App Store and Google Play checklists, compliance forms, screenshots, lessons from the first launch |
 | 06 | [Backend and corpus](docs/06-backend-and-corpus.md) | What Podcasterium shares with the DOMOVINA backend, what is flagged off, where the real cost of a global product is |
 | 07 | [Roadmap and estimates](docs/07-roadmap-and-estimates.md) | Phases, order, days, risks, definition of done |
+| 08 | [White-label architecture](docs/08-white-label-architecture.md) | **Current recommendation.** Core package + thin app shells: DOMOVINA.ai as the development/staging environment of Podcasterium, with no diverging git history |
 
 ## Rules for these documents
 
