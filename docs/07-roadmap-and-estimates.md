@@ -14,7 +14,7 @@ not measured.*
 | D2 | Bundle ID / applicationId | owner | everything in 03 |
 | D3 | Apple team: same (ITalk) or new | owner | ASC, RC, AASA |
 | D4 | Colours, logo, wordmark | owner + design | brand manifest |
-| D5 | Strategy C (fork + upstream) confirmed | owner | order of phases |
+| D5 | Architecture: core package + thin shells (`08-…`) confirmed | owner | order of phases |
 | D6 | Legal entity / operator in the footer and stores | owner | legal texts |
 | D7 | Pricing for non-euro markets (or euro-only start) | owner | Play products |
 
@@ -53,6 +53,12 @@ gantt
 ```
 
 ### Phase 0 — upstream refactor (≈ 12–15 days)
+
+> **Revised (10 Sep 2026).** Phase 0 is replaced by steps A1–A8 in
+> `08-white-label-architecture.md` §4 (≈ 14–18 days): the same brand layer,
+> plus extracting `lib/` into a `podcast_core` package so that this repository
+> becomes a thin shell with no application code. Phase 1 below loses the fork
+> step. The table is kept for the brand-layer tasks, which are unchanged.
 
 All in `domovina.ai`, all without behaviour change, all through the nightly gate.
 

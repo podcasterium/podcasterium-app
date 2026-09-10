@@ -1,7 +1,12 @@
 # 01 — Strategy: how to get two applications out of one codebase
 
-*The decision to make before a single commit. The other documents assume the
-recommendation in §4.*
+*The decision to make before a single commit.*
+
+> **Superseded (10 Sep 2026).** The owner ruled out any fork: development
+> continues in `domovina.ai` and Podcasterium must follow it without a second
+> git history. The recommendation in §4 is replaced by
+> `08-white-label-architecture.md` (core package + thin app shells). The
+> comparison in §2–§3 remains valid background.
 
 ---
 

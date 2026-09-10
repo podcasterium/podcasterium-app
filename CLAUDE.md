@@ -54,9 +54,11 @@ by chapter, diarized speakers, person hub, keyword and semantic search,
 Android TV, background audio). See `README.md` and `docs/` for the analysis
 and the plan. No application code exists in this repository yet.
 
-Relationship to upstream: `docs/01-strategy-fork-vs-flavor.md` — the brand
-layer is introduced upstream first, then this repository becomes a fork with
-an `upstream` remote.
+Relationship to upstream: `docs/08-white-label-architecture.md` — upstream
+extracts its `lib/` into a `podcast_core` package; this repository is a thin
+white-label shell that depends on that package by pinned git tag and holds
+**no application code** (only `main.dart`, a `BrandConfig`, platform
+directories, brand and store assets). Never copy core files into this repo.
 
 ## Documentation rules (inherited from upstream, kept)
 
