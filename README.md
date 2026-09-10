@@ -33,6 +33,7 @@ Everything persisted in this repository is in English — see `CLAUDE.md`.
 | 06 | [Backend and corpus](docs/06-backend-and-corpus.md) | What Podcasterium shares with the DOMOVINA backend, what is flagged off, where the real cost of a global product is |
 | 07 | [Roadmap and estimates](docs/07-roadmap-and-estimates.md) | Phases, order, days, risks, definition of done |
 | 08 | [White-label architecture](docs/08-white-label-architecture.md) | **Current recommendation.** Core package + thin app shells: DOMOVINA.ai as the development/staging environment of Podcasterium, with no diverging git history |
+| 09 | [Market research](docs/09-market-research.md) | Who else builds "YouTube for podcasts with an AI layer" (platforms, Snipd, Podwise, Podscan, Radar, Podchaser…), what the 5 M-podcast TAM really is, and where the gap is — web research, 10 Sep 2026 |
 
 ## Rules for these documents
 
