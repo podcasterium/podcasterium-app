@@ -2,7 +2,7 @@
 
 **Status: documentation and plan only. There is no code in this repository yet.**
 
-Source: <https://github.com/podcasterium/podcasterium-app> · Domain (pending purchase): `podcasterium.com` · Bundle ID: `com.podcasterium`
+Source: <https://github.com/podcasterium/podcasterium-app> · License: [MIT](LICENSE) · Domain (pending purchase): `podcasterium.com` · Bundle ID: `com.podcasterium`
 
 Podcasterium is the global version of [DOMOVINA.ai](https://domovina.ai)
 (`/Users/ms/git/domovinatv/domovina.ai`, GitHub `domovinatv/ai.domovina.tv`) —

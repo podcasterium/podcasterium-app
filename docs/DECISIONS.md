@@ -19,6 +19,8 @@ history has the diffs; this file has the reasoning that a diff cannot show.
 | 2026-09-10 | Domain: `podcasterium.com`; bundle ID and Android applicationId: `com.podcasterium` | Owner decision (D1, D2). Two-segment reverse-domain id is valid on both stores; purchase of the domain pending | `docs/03-identities-and-platforms.md` §1 |
 | 2026-09-10 | Source hosted publicly at `github.com/podcasterium/podcasterium-app` | Open-source from day one; the GitHub organization `podcasterium` was created by the owner the same day | `README.md` |
 
+| 2026-09-10 | License: MIT | Maximum adoption for a white-label engine; instances need not publish their changes. Applies to this repository; the upstream `domovina.ai` remains under its own terms until the `podcast_core` package is published | `LICENSE` |
+
 ## How to add an entry
 
 One row, one decision, past tense, with the document that carries the
