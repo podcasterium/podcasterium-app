@@ -76,3 +76,16 @@ directories, brand and store assets). Never copy core files into this repo.
 - Commit messages in English, imperative mood, with a scope prefix
   (`docs:`, `brand:`, `android:`, `ios:`, `web:`, `ci:`).
 - End commit messages with the AI co-author trailer required by the session.
+- One semantic commit per logical change (one document, one config change),
+  not one commit per session.
+- Commits are GPG-signed (`commit.gpgsign=true`, key
+  `F9968089DBE3338732A53F663420E392053523AF`). Two gotchas measured on
+  10 Sep 2026:
+  - If the key is locked, `git commit` blocks on a pinentry prompt that a
+    non-interactive shell never sees. Check first with
+    `echo x | gpg --batch --pinentry-mode error -u <key> --clearsign`;
+    if it fails, the owner unlocks the key in a terminal, then retry.
+  - Do **not** wrap `git commit` in `timeout` (coreutils) — the commit hangs
+    even with an unlocked key. Run `git commit` plainly, with `</dev/null`.
+- The `verify-doc-refs.sh` check and the diacritics grep run before every
+  docs commit.
