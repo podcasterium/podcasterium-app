@@ -2,6 +2,8 @@
 
 **Status: documentation and plan only. There is no code in this repository yet.**
 
+Source: <https://github.com/podcasterium/podcasterium-app> · Domain (pending purchase): `podcasterium.com` · Bundle ID: `com.podcasterium`
+
 Podcasterium is the global version of [DOMOVINA.ai](https://domovina.ai)
 (`/Users/ms/git/domovinatv/domovina.ai`, GitHub `domovinatv/ai.domovina.tv`) —
 a Flutter client for watching, listening to and **reading** podcasts: video

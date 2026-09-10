@@ -8,15 +8,15 @@ not measured.*
 
 ## 0. Decisions that block the start (not engineering)
 
-| # | Decision | Who | Blocks |
-| :-- | :-- | :-- | :-- |
-| D1 | Domain | owner | everything in 03 |
-| D2 | Bundle ID / applicationId | owner | everything in 03 |
-| D3 | Apple team: same (ITalk) or new | owner | ASC, RC, AASA |
-| D4 | Colours, logo, wordmark | owner + design | brand manifest |
-| D5 | Architecture: core package + thin shells (`08-…`) confirmed | owner | order of phases |
-| D6 | Legal entity / operator in the footer and stores | owner | legal texts |
-| D7 | Pricing for non-euro markets (or euro-only start) | owner | Play products |
+| # | Decision | Who | Blocks | Status |
+| :-- | :-- | :-- | :-- | :-- |
+| D1 | Domain | owner | everything in 03 | **decided: `podcasterium.com`** (10 Sep 2026; purchase pending)
+| D2 | Bundle ID / applicationId | owner | everything in 03 | **decided: `com.podcasterium`** (10 Sep 2026)
+| D3 | Apple team: same (ITalk) or new | owner | ASC, RC, AASA | open |
+| D4 | Colours, logo, wordmark | owner + design | brand manifest | open |
+| D5 | Architecture: core package + thin shells (`08-…`) confirmed | owner | order of phases | open |
+| D6 | Legal entity / operator in the footer and stores | owner | legal texts | open |
+| D7 | Pricing for non-euro markets (or euro-only start) | owner | Play products | open |
 
 ---
 

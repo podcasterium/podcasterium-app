@@ -46,8 +46,8 @@ Proposal: `brand/<brand>/release.env` (committed, no secrets):
 ```bash
 BRAND=podcasterium
 APP_DISPLAY_NAME="Podcasterium"
-BUNDLE_ID=com.podcasterium.app          # = Android applicationId
-SITE_URL=https://<domain>
+BUNDLE_ID=com.podcasterium              # = Android applicationId (decided 10 Sep 2026)
+SITE_URL=https://podcasterium.com
 PAGES_PROJECT=podcasterium
 ASC_KEY_ID=…                             # may equal DOMOVINA's if same team
 ASC_ISSUER_ID=…

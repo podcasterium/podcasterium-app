@@ -16,6 +16,9 @@ history has the diffs; this file has the reasoning that a diff cannot show.
 | 2026-09-10 | Evaluate buying the global corpus (Podscan API and peers) instead of transcribing the world | Podscan already covers 4.8 M shows; our value is article, chapters, person graph and domain score above the transcript; also dissolves the "article in source language" blocker | `docs/09-…` §7.3, `docs/06-…` §5.1 |
 | 2026-09-10 | Nothing is developed until the owner confirms D1–D7 (domain, bundle ID, Apple team, colours/logo, architecture, operator, pricing) | Each blocks identities and accounts that cannot be changed after first store upload | `docs/07-roadmap-and-estimates.md` §0 |
 
+| 2026-09-10 | Domain: `podcasterium.com`; bundle ID and Android applicationId: `com.podcasterium` | Owner decision (D1, D2). Two-segment reverse-domain id is valid on both stores; purchase of the domain pending | `docs/03-identities-and-platforms.md` §1 |
+| 2026-09-10 | Source hosted publicly at `github.com/podcasterium/podcasterium-app` | Open-source from day one; the GitHub organization `podcasterium` was created by the owner the same day | `README.md` |
+
 ## How to add an entry
 
 One row, one decision, past tense, with the document that carries the
