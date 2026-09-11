@@ -28,13 +28,25 @@ No third-party dependencies. iOS 17+, Xcode 26.
   - Source / EN toggle when the `.en.json` overlays exist.
   - Background audio with lock-screen info and remote commands
     (play, pause, skip 15 s, scrub).
+- **Mini player**: one app-wide `PlaybackSession`; leaving the episode
+  screen keeps playing and shows a bar above the tab area (tap to reopen,
+  long-press to stop). Reopening the playing episode is instant.
+- **Resume**: local "continue where you left off" per episode
+  (`UserDefaults`, saved every 5 s and on pause; dropped near start or end).
+- **Deep links** (`DeepLink.parse`): `podcasterium://episode/<id>[?t=754]`,
+  `podcasterium://channel/<id>`, the upstream web routes on any host
+  (`/v/:id`, `/v/:id/en`, `/m/:id/t/:seconds`, `/episode/:id`, `/c/:slug`)
+  and YouTube links (`watch?v=`, `youtu.be/`, `shorts/`). A timestamp
+  autoplays from there; `/en` or `lang=en` opens the English overlay.
 
 ## What it does not do
 
 Sign-in, favorites, progress sync, subscription (all Supabase-side),
 keyword and semantic search (Meilisearch and the person hub), clips, the
-person hub, deep links, a mini player that survives leaving the episode
-screen, Android TV. Nothing here is brand-specific except `BrandConfig`.
+person hub, Android TV. Universal links (`https://podcasterium.com/...`
+opening the app) need the associated-domains entitlement and an AASA file
+on the server; the parser is ready, the registration is not. Nothing here
+is brand-specific except `BrandConfig`.
 
 ## Build and run
 
@@ -51,7 +63,15 @@ xcodebuild -project Podcasterium.xcodeproj -scheme Podcasterium \
 
 Any installed simulator works; pick one from
 `xcrun simctl list devices available` if `iPhone 17` is not present. Verified
-on 12 Sep 2026: 9 tests pass on iPhone 17 (iOS 26.3.1).
+on 12 Sep 2026: 15 tests pass on iPhone 17 (iOS 26.3.1) — 14 unit tests and
+one UI test that drives the real app against the live CDN (needs network).
+
+Debug launch arguments: `-url <any accepted link>` (repeatable),
+`-episode <youtubeId>`, `-channel <id>`. Example:
+
+```bash
+xcrun simctl launch booted com.podcasterium -url "podcasterium://episode/e4aPRlJ04fc?t=754"
+```
 
 Or open the generated project in Xcode and press Run.
 
@@ -59,12 +79,15 @@ Or open the generated project in Xcode and press Run.
 
 ```
 Podcasterium/
-  App/        entry point, navigation routes, BrandConfig
-  Core/       CDN URL builder, HTTP client, models, EpisodeData loader
-  Features/   Home, Channel, Episode (player, tabs)
+  App/        entry point, navigation routes, deep-link dispatch, BrandConfig
+  Core/       CDN URL builder, HTTP client, models, EpisodeData loader,
+              DeepLink parser, ProgressStore
+  Features/   Home, Channel, Episode (player, tabs), Player (session, mini player)
   Shared/     load state, cached image view, chips, Markdown text
 PodcasteriumTests/
-  SRT parser, model decoding, URL builders
+  SRT parser, model decoding, deep-link parsing
+PodcasteriumUITests/
+  mini player survives leaving the episode screen (live CDN)
 ```
 
 The models mirror upstream `lib/models/*.dart` field by field; the wire keys

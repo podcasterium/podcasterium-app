@@ -4,7 +4,7 @@ import SwiftUI
 @MainActor
 final class EpisodeModel: ObservableObject {
     @Published var state: LoadState<EpisodeData> = .idle
-    @Published var english = false
+    @Published var english: Bool
     @Published var tab: Tab = .article
 
     enum Tab: String, CaseIterable, Identifiable {
@@ -16,49 +16,58 @@ final class EpisodeModel: ObservableObject {
     }
 
     let youtubeId: String
-    let player = PlayerController()
 
-    init(youtubeId: String) { self.youtubeId = youtubeId }
+    init(youtubeId: String, english: Bool = false) {
+        self.youtubeId = youtubeId
+        self.english = english
+    }
 
-    func load(route: EpisodeRoute) async {
+    /// Loads the episode and hands its media to the shared session. If the
+    /// session already plays this episode the data is reused and playback
+    /// continues untouched.
+    func load(route: EpisodeRoute, session: PlaybackSession) async {
         if case .loaded = state { return }
+        if let data = session.data(for: youtubeId) {
+            state = .loaded(data)
+            pickDefaultTab(data)
+            session.prepare(data, route: route, english: english)
+            return
+        }
         state = .loading
         do {
             let data = try await EpisodeData.load(youtubeId: youtubeId)
             state = .loaded(data)
-            if !data.hasArticle { tab = data.chapters.isEmpty ? .summary : .chapters }
-            if let url = data.mediaURL {
-                player.load(
-                    url: url,
-                    title: data.displayTitle(english: english),
-                    artist: data.info.channel.isEmpty ? route.channelName : data.info.channel,
-                    artworkCandidates: CDN.thumbnailCandidates(youtubeId, targetPixels: 640)
-                )
-            }
+            pickDefaultTab(data)
+            session.prepare(data, route: route, english: english)
         } catch {
             state = .failed(error)
         }
     }
 
-    func reload(route: EpisodeRoute) async {
+    func reload(route: EpisodeRoute, session: PlaybackSession) async {
         state = .idle
-        await load(route: route)
+        await load(route: route, session: session)
+    }
+
+    private func pickDefaultTab(_ data: EpisodeData) {
+        if !data.hasArticle { tab = data.chapters.isEmpty ? .summary : .chapters }
     }
 }
 
 struct EpisodeView: View {
     let route: EpisodeRoute
     @StateObject private var model: EpisodeModel
+    @EnvironmentObject private var session: PlaybackSession
 
     init(route: EpisodeRoute) {
         self.route = route
-        _model = StateObject(wrappedValue: EpisodeModel(youtubeId: route.youtubeId))
+        _model = StateObject(wrappedValue: EpisodeModel(youtubeId: route.youtubeId, english: route.english))
     }
 
     var body: some View {
-        LoadStateView(state: model.state, retry: { Task { await model.reload(route: route) } }) { data in
+        LoadStateView(state: model.state, retry: { Task { await model.reload(route: route, session: session) } }) { data in
             VStack(spacing: 0) {
-                MediaSurface(data: data, player: model.player)
+                MediaSurface(data: data, player: session.player)
                 ScrollView {
                     VStack(alignment: .leading, spacing: 14) {
                         header(data)
@@ -68,13 +77,13 @@ struct EpisodeView: View {
                         .pickerStyle(.segmented)
                         switch model.tab {
                         case .article:
-                            ArticleTab(data: data, english: model.english, player: model.player)
+                            ArticleTab(data: data, english: model.english, player: session.player)
                         case .chapters:
-                            ChaptersTab(data: data, player: model.player)
+                            ChaptersTab(data: data, player: session.player)
                         case .summary:
                             SummaryTab(data: data, english: model.english)
                         case .transcript:
-                            TranscriptTab(data: data, player: model.player)
+                            TranscriptTab(data: data, player: session.player)
                         }
                     }
                     .padding(.horizontal)
@@ -99,9 +108,13 @@ struct EpisodeView: View {
                 }
             }
         }
-        .navigationTitle(route.channelName)
+        .navigationTitle(route.channelName.isEmpty ? (model.state.value?.info.channel ?? "") : route.channelName)
         .navigationBarTitleDisplayMode(.inline)
-        .task { await model.load(route: route) }
+        .task { await model.load(route: route, session: session) }
+        .onAppear { session.visibleEpisodeId = route.youtubeId }
+        .onDisappear {
+            if session.visibleEpisodeId == route.youtubeId { session.visibleEpisodeId = nil }
+        }
     }
 
     private func header(_ data: EpisodeData) -> some View {

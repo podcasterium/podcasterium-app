@@ -58,7 +58,8 @@ struct ChannelView: View {
             .listStyle(.insetGrouped)
             .refreshable { await model.reload() }
         }
-        .navigationTitle(route.name)
+        // Deep links only know the id; switch to the real name once loaded.
+        .navigationTitle(model.state.value?.name ?? route.name)
         .navigationBarTitleDisplayMode(.inline)
         .task { await model.load() }
     }

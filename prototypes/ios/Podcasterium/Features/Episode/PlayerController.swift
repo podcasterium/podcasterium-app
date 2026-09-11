@@ -33,7 +33,10 @@ final class PlayerController: ObservableObject {
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
     }
 
-    func load(url: URL, title: String, artist: String, artworkCandidates: [URL]) {
+    /// Loads `url` and, once the item is ready, seeks to `startAt` (resume
+    /// position or deep-link timestamp) and starts playback if `autoplay`.
+    func load(url: URL, title: String, artist: String, artworkCandidates: [URL],
+              startAt: TimeInterval? = nil, autoplay: Bool = false) {
         configureAudioSession()
         let item = AVPlayerItem(url: url)
         player.replaceCurrentItem(with: item)
@@ -44,10 +47,12 @@ final class PlayerController: ObservableObject {
         statusObservation = item.observe(\.status, options: [.new]) { [weak self] item, _ in
             Task { @MainActor [weak self] in
                 guard let self else { return }
-                if item.status == .readyToPlay {
+                if item.status == .readyToPlay, !self.isReady {
                     self.isReady = true
                     let seconds = item.duration.seconds
                     self.duration = seconds.isFinite ? seconds : 0
+                    if let startAt, startAt > 0 { self.seek(to: startAt) }
+                    if autoplay { self.play() }
                     self.updateNowPlaying()
                 }
             }
@@ -81,6 +86,19 @@ final class PlayerController: ObservableObject {
                 self?.updateNowPlaying()
             }
         }
+    }
+
+    /// Drops the current item and clears the lock-screen entry.
+    func unload() {
+        player.pause()
+        player.replaceCurrentItem(with: nil)
+        statusObservation = nil
+        isReady = false
+        isPlaying = false
+        currentTime = 0
+        duration = 0
+        nowPlaying = [:]
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
     }
 
     func play() {

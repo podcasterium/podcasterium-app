@@ -44,6 +44,12 @@ targets:
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
         ITSAppUsesNonExemptEncryption: false
+        # Custom scheme handled by DeepLink.parse. Universal links
+        # (https://podcasterium.com/...) additionally need the associated
+        # domains entitlement and an AASA file on the server; not done here.
+        CFBundleURLTypes:
+          - CFBundleURLName: com.podcasterium
+            CFBundleURLSchemes: [podcasterium]
   PodcasteriumTests:
     type: bundle.unit-test
     platform: iOS
@@ -55,15 +61,28 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.podcasterium.tests
         GENERATE_INFOPLIST_FILE: YES
+  PodcasteriumUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: PodcasteriumUITests
+    dependencies:
+      - target: Podcasterium
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.podcasterium.uitests
+        GENERATE_INFOPLIST_FILE: YES
 schemes:
   Podcasterium:
     build:
       targets:
         Podcasterium: all
         PodcasteriumTests: [test]
+        PodcasteriumUITests: [test]
     run:
       config: Debug
     test:
       config: Debug
       targets:
         - PodcasteriumTests
+        - PodcasteriumUITests
