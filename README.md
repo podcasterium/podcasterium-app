@@ -37,6 +37,7 @@ Everything persisted in this repository is in English — see `CLAUDE.md`.
 | 08 | [White-label architecture](docs/08-white-label-architecture.md) | **Current recommendation.** Core package + thin app shells: DOMOVINA.ai as the development/staging environment of Podcasterium, with no diverging git history |
 | — | [Decision log](docs/DECISIONS.md) | Dated record of every decision that shapes this repository, with the reasoning and the document behind it |
 | 09 | [Market research](docs/09-market-research.md) | Who else builds "YouTube for podcasts with an AI layer" (platforms, Snipd, Podwise, Podscan, Radar, Podchaser…), what the 5 M-podcast TAM really is, and where the gap is — web research, 10 Sep 2026 |
+| 10 | [Technology stack review](docs/10-tech-stack-review.md) | Whether Flutter is still the right choice given the feature set (yes for mobile and Android TV), where it is weak (web reader), and what a greenfield stack would look like in 2026 |
 
 ## Rules for these documents
 

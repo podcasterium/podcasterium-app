@@ -20,6 +20,7 @@ history has the diffs; this file has the reasoning that a diff cannot show.
 | 2026-09-10 | Source hosted publicly at `github.com/podcasterium/podcasterium-app` | Open-source from day one; the GitHub organization `podcasterium` was created by the owner the same day | `README.md` |
 
 | 2026-09-10 | License: MIT | Maximum adoption for a white-label engine; instances need not publish their changes. Applies to this repository; the upstream `domovina.ai` remains under its own terms until the `podcast_core` package is published | `LICENSE` |
+| 2026-09-11 | Stack stays Flutter for iOS, Android and Android TV; the public web reader gets a separate server-rendered front (Next.js or Astro on Cloudflare) over the same CDN contract; no rewrite, tvOS skipped | Nothing in the feature set needs native code except tvOS; the only real weakness is Flutter web (SEO, text, first load), which is fixed at the web seam, not by rewriting 58.6 k lines (estimate 8–14 person-months) | `docs/10-tech-stack-review.md` |
 
 ## How to add an entry
 
