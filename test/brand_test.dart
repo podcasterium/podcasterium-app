@@ -27,9 +27,10 @@ void main() {
     expect(podcasteriumBrand.endpoints.site, 'https://podcasterium.com');
   });
 
+  // Certilia (e-Osobna) is not a flag: it is an AuthProviderPlugin that only
+  // the DOMOVINA shell registers, so this shell has no dependency on it.
   test('phase-1 feature flags are off', () {
     final f = podcasteriumBrand.flags;
-    expect(f.certilia, isFalse);
     expect(f.voting, isFalse);
     expect(f.pinka, isFalse);
     expect(f.channelOwnership, isFalse);
