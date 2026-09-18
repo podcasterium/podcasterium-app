@@ -52,13 +52,16 @@ Podcasterium is a global, brand-neutral fork of the Flutter application
 DOMOVINA.ai — watch, listen to and **read** podcasts (video plus AI article
 by chapter, diarized speakers, person hub, keyword and semantic search,
 Android TV, background audio). See `README.md` and `docs/` for the analysis
-and the plan. No application code exists in this repository yet.
+and the plan. Since 18 Sep 2026 the repository also holds the shell itself.
 
 Relationship to upstream: `docs/08-white-label-architecture.md` — upstream
 extracts its `lib/` into a `podcast_core` package; this repository is a thin
 white-label shell that depends on that package by pinned git tag and holds
-**no application code** (only `main.dart`, a `BrandConfig`, platform
-directories, brand and store assets). Never copy core files into this repo.
+**no application code** (only `lib/main.dart`, `lib/brand.dart` with the
+`BrandConfig`, platform directories, brand and store assets). Never copy core
+files into this repo. Local builds use `pubspec_overrides.yaml` (git-ignored,
+see the example file) to point at the upstream checkout until the core is
+published under a tag.
 
 ## Documentation rules (inherited from upstream, kept)
 

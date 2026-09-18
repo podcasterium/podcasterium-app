@@ -1,6 +1,7 @@
 # Podcasterium — application
 
-**Status: documentation and plan only. There is no code in this repository yet.**
+**Status: thin Flutter shell over `podcast_core` (since 18 Sep 2026); the core
+is being extracted upstream on branch `feat/podcast-core`, not yet tagged.**
 
 Source: <https://github.com/podcasterium/podcasterium-app> · License: [MIT](LICENSE) · Domain (pending purchase): `podcasterium.com` · Bundle ID: `com.podcasterium`
 
@@ -16,9 +17,26 @@ Google Play, serving a niche of Croatian Catholic and patriotic podcasts.
 Podcasterium is the **same product without that context**, under a new
 brand, bundle ID and package name, for any podcast in the world.
 
-This repository currently holds the analysis of the source application and
-the proposals for reaching a standalone iOS/Android/web app **without a
-rewrite**.
+This repository holds the analysis of the source application, the plan for
+reaching a standalone iOS/Android/web app **without a rewrite**, and the
+shell itself: `lib/main.dart`, `lib/brand.dart` (the `BrandConfig`), the
+platform directories and brand assets. All application code lives in the
+`podcast_core` package (see below). A SwiftUI experiment lives in
+`prototypes/ios/` and is not the plan.
+
+## Building the shell
+
+```bash
+# against the pinned core tag (once it is published)
+flutter pub get && flutter run
+
+# against a local checkout of the upstream monorepo
+cp pubspec_overrides.example.yaml pubspec_overrides.yaml   # git-ignored
+flutter pub get && flutter run
+```
+
+`flutter analyze` and `flutter test` must be clean; `test/brand_test.dart`
+is the tripwire that keeps DOMOVINA identity out of this brand.
 
 Everything persisted in this repository is in English — see `CLAUDE.md`.
 

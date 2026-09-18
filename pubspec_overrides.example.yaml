@@ -1,0 +1,5 @@
+# Copy to pubspec_overrides.yaml (git-ignored) to build against a local
+# checkout of the upstream monorepo instead of the pinned core tag.
+dependency_overrides:
+  podcast_core:
+    path: ../../domovinatv/domovina.ai/packages/podcast_core

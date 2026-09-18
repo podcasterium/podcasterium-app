@@ -1,0 +1,38 @@
+name: podcasterium
+description: "Podcasterium — watch, listen to and read podcasts. Thin white-label shell over the podcast_core package."
+publish_to: 'none'
+
+# Application version. The core package is versioned separately by git tag.
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.11.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # All application code. Pinned to a core tag; bumping this line is the only
+  # way this shell picks up upstream changes (docs/08-white-label-architecture.md).
+  # The core is developed inside the upstream DOMOVINA.ai monorepo as
+  # packages/podcast_core and published from there under this tag.
+  #
+  # Local development against an upstream checkout: copy
+  # pubspec_overrides.example.yaml to pubspec_overrides.yaml (git-ignored).
+  podcast_core:
+    git:
+      url: https://github.com/podcasterium/podcast_core.git
+      ref: core-v0.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Asset contract with the core (see docs/08 §3.3 and the upstream
+  # CLAUDE.md, section "Raspored"): the core loads brand images from the
+  # shell's bundle at the paths given in BrandConfig.
+  assets:
+    - assets/brand/
