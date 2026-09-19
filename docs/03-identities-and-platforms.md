@@ -231,7 +231,7 @@ public by design — `assetlinks.json` publishes them.
 | Upload key SHA-256 | `D3:86:8D:12:4F:7C:DD:27:71:01:12:09:AD:B6:DB:75:7D:5E:2F:11:8B:EE:78:1C:0F:21:44:F7:9D:53:A4:02` | as above |
 | Upload key SHA-1 | `FB:5D:6E:05:9A:CC:02:A3:D6:87:81:CB:32:19:35:B9:7A:88:C8:FF` — needed for the Google OAuth Android client | as above |
 | Release signing | wired and proven: an 86.6 MB AAB built from this shell carries `CN=Podcasterium` | `apksigner verify --print-certs build/app/outputs/bundle/release/app-release.aab` |
-| Play app | **not created.** The Play Developer API has no create-app call; the Play Console is the only way | — |
+| Play app | **not created** (owner decision 19 Sep 2026: wait for the name and icon). It goes under the same organization that holds `ai.domovina` — **ITalk Ltd.**, Play account `7441230488937961517`. The Play Developer API has no create-app call; the console is the only way | Play Console → app list |
 | `ANDROID_SHA256` binding | currently the **upload** key only. The Play App Signing fingerprint does not exist until the first upload, and `assetlinks.json` needs it first (§2 gotcha) | Play Console → App integrity |
 | RevenueCat | project `Podcasterium` (`proj9b6e08d9`), apps `Podcasterium (iOS)` / `Podcasterium (Android)`, entitlement `podcasterium_plus` — a separate project, not new apps in the DOMOVINA one | RC dashboard, or `list-projects` |
 | RC store credentials | **not configured** — the ASC API key and the Play service account must be uploaded per project in the dashboard; RC can only copy them between apps inside one project | RC → app settings |
