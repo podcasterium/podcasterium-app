@@ -221,7 +221,7 @@ public by design — `assetlinks.json` publishes them.
 | Cloudflare Pages | project `podcasterium`, `podcasterium.pages.dev`, production branch `main`, compatibility date 2026-01-01, 9 bindings on **both** production and preview | `wrangler pages project list` |
 | Pages bindings set | `SITE`, `APP_NAME`, `IOS_BUNDLE_ID`, `ANDROID_PACKAGE`, `ANDROID_SHA256`, `WEBAUTHN_ORIGINS`, `FEATURE_VOTING=false`, `FEATURE_CAL=false`, `FEATURE_AIRKUNA=false` | Pages → Settings → Environment variables |
 | Pages bindings left at default | `CDN`, `PERSON_API`, `PERSONS_API`, `APPLE_TEAM_ID` — phase 1 shares the DOMOVINA backend and the Apple team, so the worker defaults are already correct | `docs/worker-env-bindings.md` upstream |
-| Custom domain on Pages | **not attached** — `podcasterium.com` would serve an empty project until the first deploy | Pages → Custom domains |
+| Custom domain on Pages | `podcasterium.com` (apex) and `www.podcasterium.com` attached 19 Sep 2026; Cloudflare wrote both CNAMEs to `podcasterium.pages.dev`. The project has **no deployment yet**, so both hosts answer **HTTP 522** in public until the first `wrangler pages deploy` | `dig +short podcasterium.com`; `curl -o /dev/null -w '%{http_code}\n' https://podcasterium.com/` |
 | Apple team | `6SCK58757K` (ITalk d.o.o.); it is the only seed ID across all 68 bundle IDs on the account | `GET /v1/bundleIds` with `scripts/asc-token.rb` |
 | Bundle ID `com.podcasterium` | **registered** 19 Sep 2026, record `MJMYPA86QA`, platform UNIVERSAL | `GET /v1/bundleIds` |
 | Its capabilities | `IN_APP_PURCHASE`, `ASSOCIATED_DOMAINS`, `APPLE_ID_AUTH` (PRIMARY_APP_CONSENT) — the same three `ai.domovina` carries | `GET /v1/bundleIds/MJMYPA86QA/bundleIdCapabilities` |
@@ -249,7 +249,12 @@ public by design — `assetlinks.json` publishes them.
    the subscription group.
 3. **The first web deploy** unlocks AASA and assetlinks on the domain, which
    Apple wants live *before* the first TestFlight build (§3 gotcha), and which
-   Google OAuth branding verification wants too.
+   Google OAuth branding verification wants too. It also ends the 522 that the
+   attached custom domains serve until then.
+4. **Android developer verification**: the Play Console warns that every app
+   under ITalk Ltd. must be registered for it by **30 Sep 2026**. Podcasterium
+   has no Play app yet, so nothing is at risk today, but a new app created
+   after that date inherits the requirement.
 
 ### Open question recorded here, not decided
 
