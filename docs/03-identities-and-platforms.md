@@ -9,19 +9,19 @@ keys outside the repo. Paths are from `domovina.ai` @ `cfb45aa`.*
 
 | Identity | DOMOVINA.ai today | Podcasterium (proposal) | Note |
 | :-- | :-- | :-- | :-- |
-| Domain | `domovina.ai` | **`podcasterium.com`** (decided 10 Sep 2026; purchase pending) | Everything below depends on it |
+| Domain | `domovina.ai` | **`podcasterium.com`** (decided 10 Sep 2026; registered 19 Sep 2026 through Cloudflare Registrar — §8) | Everything below depends on it |
 | iOS bundle ID | `ai.domovina` | **`com.podcasterium`** (decided 10 Sep 2026) | Cannot change after the first upload to ASC |
 | Android applicationId | `ai.domovina` | **`com.podcasterium`** — the same string as the bundle ID | Play locks it forever; must be a valid Java package with ≥ 2 segments — `com.podcasterium` satisfies both |
 | Android namespace / Kotlin package | `ai.domovina` | `com.podcasterium` | `MainActivity.kt` moves to `kotlin/com/podcasterium/` |
-| Custom URL scheme | `ai.domovina://` | `com.podcasterium://` (mirrors the bundle ID, like upstream) — or `podcasterium://`; to decide | Used by the Supabase native OAuth/magic-link return; must be registered in the GoTrue allow-list |
-| Apple Team | `6SCK58757K` (ITalk d.o.o.) | same team **or** new | If same: AASA can carry both apps; passkeys share webcredentials only on the same domain (they don't). If new: new ASC API key, new agreements, new banking details |
-| App Store app id | `6781716801` | assigned when the app record is created | goes into `app_install_banner.dart` and the `apple-itunes-app` meta |
+| Custom URL scheme | `ai.domovina://` | **`com.podcasterium://`** (mirrors the bundle ID, like upstream; confirmed 19 Sep 2026) | Used by the Supabase native OAuth/magic-link return; must be registered in the GoTrue allow-list |
+| Apple Team | `6SCK58757K` (ITalk d.o.o.) | **same team `6SCK58757K`** (decided 19 Sep 2026) | If same: AASA can carry both apps; passkeys share webcredentials only on the same domain (they don't). If new: new ASC API key, new agreements, new banking details |
+| App Store app id | `6781716801` | assigned when the app record is created — **still open**, the record cannot be created over the API (§8) | goes into `app_install_banner.dart` and the `apple-itunes-app` meta |
 | Play app | `ai.domovina` | new app in the same Play Console organization | Enable Play App Signing on the first upload |
-| Android upload keystore | `android/upload-keystore.jks`, alias `upload` | **new keystore, new alias** | Separate key per app; loss = reset via Play support |
-| RevenueCat | project with 2 store apps, entitlement `domovina_plus` | **new RC project** (or new app entries in the same) with entitlement `podcasterium_plus` | An RC app is tied to the bundle ID; products are created in ASC/Play under the new app |
+| Android upload keystore | `android/upload-keystore.jks`, alias `upload` | **generated 19 Sep 2026**, alias `upload` (§8) | Separate key per app; loss = reset via Play support |
+| RevenueCat | project with 2 store apps, entitlement `domovina_plus` | **project `Podcasterium` created 19 Sep 2026** with entitlement `podcasterium_plus` (§8) | An RC app is tied to the bundle ID; products are created in ASC/Play under the new app |
 | Supabase project | `api.domovina.ai` (self-hosted, Coolify) | **same project in phase 1** | See §5 — consequences for user data |
-| Cloudflare Pages project | `domovina-ai` | `podcasterium` | New `wrangler.toml` name; same `_worker.js` with another env binding |
-| Cloudflare zone | `domovina.ai` (`CLOUDFLARE_ZONE_ID` in `.env`) | `podcasterium.com` zone | `deploy.sh` purges the zone |
+| Cloudflare Pages project | `domovina-ai` | `podcasterium`, **created 19 Sep 2026** with 9 env bindings (§8) | New `wrangler.toml` name; same `_worker.js` with another env binding |
+| Cloudflare zone | `domovina.ai` (`CLOUDFLARE_ZONE_ID` in `.env`) | `podcasterium.com` zone, **active 19 Sep 2026** on the same account (§8) | `deploy.sh` purges the zone; the zone ID lives in `.env`, never in `docs/` |
 | Cloudflare Web Analytics token | `84ead45314724f59905c5a5ccbd19bd1` in `index.html` | new site | — |
 | Corbado passkeys | `passkeys_bundle.js` + RP ID `domovina.ai` | new RP ID = new domain | Passkeys are bound to the RP ID — **they do not transfer** |
 | Meilisearch search key | deterministic read-only key | same (same index in phase 1) | — |
@@ -182,19 +182,81 @@ programmatically; steps 1–2 are the ASC/Play API or the consoles.
 
 ## 7. Checklist "identity is done"
 
+State on 19 September 2026 (evidence for every tick in §8):
+
 ```
-[ ] podcasterium.com bought, zone on Cloudflare, DNS
-[ ] bundle ID = applicationId = com.podcasterium registered in ASC with Associated Domains
-[ ] new Android keystore generated, backup in two places, key.properties locally
+[x] podcasterium.com bought, zone on Cloudflare, DNS
+[x] bundle ID = applicationId = com.podcasterium registered in ASC with Associated Domains
+[x] new Android keystore generated, key.properties locally — BACKUP IN TWO PLACES STILL OWED
 [ ] Play app created, Play App Signing ON, SHA-256 of the App Signing cert recorded
-[ ] GoTrue allow-list: scheme + web callback routes
+[~] GoTrue allow-list: scheme + web callback routes (committed in domovina-api, not yet live)
 [ ] Google OAuth: Android (2 SHA-1) + iOS + web origin/redirect; branding verification started
-[ ] Sign in with Apple: bundle in the group, Service ID for the web
+[~] Sign in with Apple: bundle registered as its own primary consent; grouping with
+    ai.domovina and the web Service ID still open
 [ ] Corbado / WebAuthn project for the new domain
-[ ] RC project + entitlement + webhook secret
-[ ] Cloudflare Pages project + env bindings for the worker (SITE, CDN, PERSON_API, APPLE_TEAM_ID, IOS_BUNDLE_ID, ANDROID_PACKAGE, ANDROID_SHA256)
+[~] RC project + entitlement (done) + store credentials + webhook secret (open)
+[x] Cloudflare Pages project + env bindings for the worker (SITE, CDN, PERSON_API, APPLE_TEAM_ID, IOS_BUNDLE_ID, ANDROID_PACKAGE, ANDROID_SHA256)
 [ ] AASA and assetlinks served from the new domain and passing the validators
     (curl https://<domain>/.well-known/apple-app-site-association | jq;
      https://developers.google.com/digital-asset-links/tools/generator)
 [ ] launchd job names and times do not collide with the DOMOVINA nightly
+[ ] ASC app record created (name, SKU, category) and its App Store ID in lib/brand.dart
 ```
+
+`[~]` = started, not finished.
+
+---
+
+## 8. Status — 19 September 2026
+
+Measured, not assumed. Every claim has the command that reproduces it. Secrets
+and account-scoped identifiers (Cloudflare zone ID, keystore passwords) live in
+`.env` and `android/key.properties`, never here; certificate fingerprints are
+public by design — `assetlinks.json` publishes them.
+
+| Item | State | How to check |
+| :-- | :-- | :-- |
+| `podcasterium.com` | **registered** 19 Sep 2026 14:23:34 UTC through Cloudflare Registrar | `whois podcasterium.com \| grep 'Creation Date'` |
+| DNS | Cloudflare nameservers `jessica`/`nitin`, zone active on the same account as `domovina.ai` | `dig +short NS podcasterium.com` |
+| Cloudflare Pages | project `podcasterium`, `podcasterium.pages.dev`, production branch `main`, compatibility date 2026-01-01, 9 bindings on **both** production and preview | `wrangler pages project list` |
+| Pages bindings set | `SITE`, `APP_NAME`, `IOS_BUNDLE_ID`, `ANDROID_PACKAGE`, `ANDROID_SHA256`, `WEBAUTHN_ORIGINS`, `FEATURE_VOTING=false`, `FEATURE_CAL=false`, `FEATURE_AIRKUNA=false` | Pages → Settings → Environment variables |
+| Pages bindings left at default | `CDN`, `PERSON_API`, `PERSONS_API`, `APPLE_TEAM_ID` — phase 1 shares the DOMOVINA backend and the Apple team, so the worker defaults are already correct | `docs/worker-env-bindings.md` upstream |
+| Custom domain on Pages | **not attached** — `podcasterium.com` would serve an empty project until the first deploy | Pages → Custom domains |
+| Apple team | `6SCK58757K` (ITalk d.o.o.); it is the only seed ID across all 68 bundle IDs on the account | `GET /v1/bundleIds` with `scripts/asc-token.rb` |
+| Bundle ID `com.podcasterium` | **registered** 19 Sep 2026, record `MJMYPA86QA`, platform UNIVERSAL | `GET /v1/bundleIds` |
+| Its capabilities | `IN_APP_PURCHASE`, `ASSOCIATED_DOMAINS`, `APPLE_ID_AUTH` (PRIMARY_APP_CONSENT) — the same three `ai.domovina` carries | `GET /v1/bundleIds/MJMYPA86QA/bundleIdCapabilities` |
+| ASC app record | **not created.** The ASC API refuses it: *"The resource 'apps' does not allow 'CREATE'. Allowed operations are: GET_COLLECTION, GET_INSTANCE, UPDATE"*. Console only, and the browser profile is not signed in to App Store Connect | `POST /v1/apps` → HTTP 403 |
+| `iosAppStoreId` | still `'0'` in `lib/brand.dart`; it cannot be known before the app record exists | `grep iosAppStoreId lib/brand.dart` |
+| Android upload keystore | **generated** 19 Sep 2026: alias `upload`, RSA 2048, SHA384withRSA, `CN=Podcasterium`, valid until 4 Feb 2054. Not a copy of the DOMOVINA key | `keytool -list -v -keystore android/upload-keystore.jks` |
+| Upload key SHA-256 | `D3:86:8D:12:4F:7C:DD:27:71:01:12:09:AD:B6:DB:75:7D:5E:2F:11:8B:EE:78:1C:0F:21:44:F7:9D:53:A4:02` | as above |
+| Upload key SHA-1 | `FB:5D:6E:05:9A:CC:02:A3:D6:87:81:CB:32:19:35:B9:7A:88:C8:FF` — needed for the Google OAuth Android client | as above |
+| Release signing | wired and proven: an 86.6 MB AAB built from this shell carries `CN=Podcasterium` | `apksigner verify --print-certs build/app/outputs/bundle/release/app-release.aab` |
+| Play app | **not created.** The Play Developer API has no create-app call; the Play Console is the only way | — |
+| `ANDROID_SHA256` binding | currently the **upload** key only. The Play App Signing fingerprint does not exist until the first upload, and `assetlinks.json` needs it first (§2 gotcha) | Play Console → App integrity |
+| RevenueCat | project `Podcasterium` (`proj9b6e08d9`), apps `Podcasterium (iOS)` / `Podcasterium (Android)`, entitlement `podcasterium_plus` — a separate project, not new apps in the DOMOVINA one | RC dashboard, or `list-projects` |
+| RC store credentials | **not configured** — the ASC API key and the Play service account must be uploaded per project in the dashboard; RC can only copy them between apps inside one project | RC → app settings |
+| RC products / offering | none yet; they follow the ASC and Play products (§6 steps 1–2) | — |
+| GoTrue allow-list | `com.podcasterium://auth/callback` and `https://podcasterium.com/auth/callback` committed to `coolify-config-overrides.env` in `domovina-api`. The key is CSV_UNION, so live redirects survive the merge. **Not yet live** — it needs `domovina-api/scripts/coolify-env-merge.sh` plus Save + Deploy in Coolify by hand (the API token returns 403) | `grep ADDITIONAL_REDIRECT_URLS` in `domovina-api` |
+| Google OAuth clients | **none** for the new package/bundle/origin; branding verification not started (§5, and `05-…` §7 — it took DOMOVINA weeks) | Google Cloud console |
+| Corbado / passkeys | **no** project for the new RP ID | — |
+| RC webhook | not connected to the `domovina-api` edge function | — |
+
+### What blocks what
+
+1. **First Play upload** unlocks the App Signing SHA-256, which unlocks
+   `assetlinks.json`, which unlocks Android App Links verification.
+2. **The ASC app record** unlocks the App Store ID, `apple-itunes-app`, and
+   the subscription group.
+3. **The first web deploy** unlocks AASA and assetlinks on the domain, which
+   Apple wants live *before* the first TestFlight build (§3 gotcha), and which
+   Google OAuth branding verification wants too.
+
+### Open question recorded here, not decided
+
+`com.podcasterium` was registered with **`PRIMARY_APP_CONSENT`** for Sign in
+with Apple — it is its own primary app, not grouped with `ai.domovina`.
+Grouping would give one Apple user the same identifier in both apps, which
+matches the phase-1 decision to share `auth.users`; not grouping means the
+same person signs in as two different users. Changing the grouping later
+changes the identifier, so it costs nothing today (no users) and everything
+after launch. Decide before the first TestFlight build.
