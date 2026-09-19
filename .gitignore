@@ -54,3 +54,7 @@ pubspec_overrides.yaml
 # the lock would record the owner-machine path. Re-add once the core tag is
 # published and pubspec_overrides.yaml is no longer needed.
 pubspec.lock
+
+# Local secrets and identifiers (see .env.example for the expected keys)
+.env
+.env.local
