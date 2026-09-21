@@ -40,8 +40,37 @@ flowchart TB
 ```
 
 **Phase 1 Podcasterium targets all of the same.** That is deliberate: it
-proves the build, identity, stores and brand — not the corpus. The only thing
-that changes is what is **switched off** (§3).
+proves the build, identity, stores and brand — not the corpus.
+
+### 1.1 Two things change, not one
+
+What is **switched off** (§3) — and, found on the first web deploy, **the
+browser origin**. Every shared service that a browser calls directly has a
+CORS allow-list built for `https://domovina.ai`, and `https://podcasterium.com`
+is not in it.
+
+Measured 21 Sep 2026:
+
+```bash
+curl -sD - -o /dev/null -H 'Origin: https://domovina.ai'     https://mcp.domovina.ai/api/persons | grep -i access-control-allow-origin
+# access-control-allow-origin: https://domovina.ai
+curl -sD - -o /dev/null -H 'Origin: https://podcasterium.com' https://mcp.domovina.ai/api/persons | grep -i access-control-allow-origin
+# (nothing — the browser then fails the fetch)
+```
+
+In the running app that surfaces as
+`PersonService: error on /api/persons: ClientException: Failed to fetch`, and
+the person hub stays empty on the web. The response itself is a 200; only the
+header is missing, so `curl` without an `Origin` sees nothing wrong — which is
+why this did not show up until a browser loaded the app.
+
+Not affected: the worker's own `PERSON_API`/`PERSONS_API` calls, which are
+server-side, so SSR `/p/*` pages and the sitemap work. Not yet checked the
+same way: `search.domovina.ai` (Meilisearch) and `cutter.domovina.ai`.
+
+The fix belongs with the shared backends, next to the GoTrue redirect
+allow-list (`03-…` §5): every origin allow-list learns the new domain. On
+Android and iOS there is no origin, so the native apps never saw this.
 
 ---
 
