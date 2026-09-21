@@ -69,15 +69,81 @@ Today's chain (`deploy.sh`): version bump → `flutter pub get` → `flutter ana
 `wrangler pages deploy build/web --project-name=…` → purge zone → HTTP 200
 check → AASA tripwire.
 
-For Podcasterium only the input changes:
+For Podcasterium the input changes **and one file has to arrive from
+somewhere**:
 
 ```bash
 flutter build web --release --wasm \
-  --dart-define=BRAND=podcasterium \
   --dart-define=SUPABASE_URL=… --dart-define=SUPABASE_ANON_KEY=… \
   --dart-define=MEILI_URL=… --dart-define=RC_WEB_CHECKOUT_URL=…
+cp <upstream>/web/{_worker.js,_headers,robots.txt} build/web/   # see below
 wrangler pages deploy build/web --project-name=podcasterium
 ```
+
+**The gap, found by doing it on 21 Sep 2026.** This shell's `web/` holds only
+`index.html`, `manifest.json`, `favicon.png` and `icons/` — the Flutter
+template. `_worker.js` and `_headers` live upstream, and Flutter copies
+`web/` into `build/web` verbatim, so a plain `wrangler pages deploy` from
+here ships a **bare SPA**: no SSR, no `/.well-known/*`, no sitemap, no cache
+strategy. Everything `03-…` §4 and the upstream worker doc describe is
+in that one file (upstream `docs/worker-env-bindings.md`, on the
+`feat/podcast-core` branch — `verify-doc-refs.sh` flags it while the upstream
+checkout sits on `main`).
+
+That contradicts nothing in `08-…`, but it is not covered by it either: the
+worker is not Dart, so it cannot ride along in `podcast_core`, and copying it
+into this repo would be the copy the architecture forbids. Until it is
+decided, the deploy copies the three files out of the upstream checkout. The
+candidates:
+
+| Option | Cost |
+| :-- | :-- |
+| `podcast_core` ships them as package assets, the shell's build copies them out | Keeps one source; needs a build step that reaches into the package |
+| Upstream publishes them with the core tag, the shell vendors them on release | Explicit, versioned; a second thing to remember per tag |
+| The shell keeps its own copy | Simple; two workers drift, which is exactly what `08-…` exists to prevent |
+
+**Measured 21 Sep 2026**, first deploy of this shell (48 files, 48 MB;
+`main.dart.wasm` 4.47 MB, `main.dart.js` 5.07 MB fallback), with the three
+files copied in by hand:
+
+- `https://podcasterium.com/` → HTTP 200
+- `/.well-known/assetlinks.json` → `com.podcasterium` with the upload key's
+  SHA-256, and **no** airKUNA entry (`FEATURE_AIRKUNA=false` works)
+- `/.well-known/apple-app-site-association` → `6SCK58757K.com.podcasterium`
+- `/.well-known/webauthn` → only the two podcasterium origins
+- `/sitemap.xml` → `podcasterium.com` URLs built from the shared DOMOVINA CDN
+- `/c/abbacast` and `/v/O4TArTY954o` → SSR with `og:site_name = Podcasterium`
+  over `cdn.domovina.ai` images, i.e. phase-1 corpus sharing works end to end
+- `/glasanje` → SPA fallback, not the voting SSR (`FEATURE_VOTING=false`)
+
+Not yet right: `og:image` points at `/og-image.png`, which this shell does not
+have (brand assets are placeholders until D4), so link previews 404 on the
+image.
+
+### Static pages on the same domain (`/roadmap`, `/features`, …)
+
+The worker already has the seam. Before the SPA fallback it does a
+**pretty-URL lookup**: for a path with no extension and no route match it
+fetches `<path>.html` from the Pages asset tree and serves it if present.
+So a separately built static site (Astro or anything else) needs only to land
+in `build/web` as flat files — `roadmap.html`, not `roadmap/index.html`,
+because the trailing-slash branch 301s `/roadmap/` → `/roadmap` and the
+lookup then asks for `roadmap.html`. In Astro that is
+`build: { format: 'file' }`.
+
+Proven on the `routing-probe` preview deployment, 21 Sep 2026:
+
+| Request | Result |
+| :-- | :-- |
+| `/roadmap`, `/features` | 200, the static HTML |
+| `/roadmap/` | 301 → `/roadmap` |
+| `/nepostojeca-ruta` | 200, SPA fallback |
+| `/c/abbacast` | 200, still SSR |
+
+The alternative, if the landing pages should deploy on their own schedule, is
+a separate Worker bound to zone routes (`podcasterium.com/roadmap*`), which
+takes precedence over the Pages project. That buys independent deploys and
+costs a route list that has to stay in sync.
 
 What to know, paid for by experience (CLAUDE.md + `docs/web-delivery-and-rendering.md`):
 
@@ -95,7 +161,8 @@ What to know, paid for by experience (CLAUDE.md + `docs/web-delivery-and-renderi
 
 **Worker env bindings** (Pages → Settings → Variables): `SITE`, `CDN`,
 `PERSON_API`, `PERSONS_API`, `APPLE_TEAM_ID`, `IOS_BUNDLE_ID`,
-`ANDROID_PACKAGE`, `ANDROID_SHA256`, `FEATURE_VOTING=0`, `FEATURE_CAL=0`,
+`ANDROID_PACKAGE`, `ANDROID_SHA256`, `FEATURE_VOTING=false`, `FEATURE_CAL=false`,
+`FEATURE_AIRKUNA=false`,
 `CAL_API_KEY` (secret, only if cal is on). The worker reads `env.X ?? default`.
 
 Local dev: `scripts/run-local.sh` — port 5173 is in the GoTrue allow-list;
