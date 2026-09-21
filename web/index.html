@@ -41,6 +41,13 @@
     For more details:
     * https://docs.flutter.dev/platform-integration/web/initialization
   -->
+  <!-- Corbado passkeys Web SDK (bundle.js, pinned 2.5.0), vendored from
+       upstream. Must load SYNCHRONOUSLY before flutter_bootstrap.js: the
+       passkeys_web plugin reads it during startup, and without it the app
+       throws "Cannot read properties of undefined (reading 'init')" and
+       renders nothing. Measured on the first deploy, 21 Sep 2026. -->
+  <script src="passkeys_bundle.js"></script>
+
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
