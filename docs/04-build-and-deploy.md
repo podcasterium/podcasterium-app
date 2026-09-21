@@ -140,10 +140,29 @@ Proven on the `routing-probe` preview deployment, 21 Sep 2026:
 | `/nepostojeca-ruta` | 200, SPA fallback |
 | `/c/abbacast` | 200, still SSR |
 
-The alternative, if the landing pages should deploy on their own schedule, is
-a separate Worker bound to zone routes (`podcasterium.com/roadmap*`), which
-takes precedence over the Pages project. That buys independent deploys and
-costs a route list that has to stay in sync.
+**Chosen 22 Sep 2026: the separate Worker.** The seam above stays available,
+but `/roadmap` and `/features` are served by a Worker bound to zone routes,
+from the sibling repo `podcasterium-landing`. A Worker route takes precedence
+over the Pages custom domain, so the landing deploys on its own schedule and a
+broken build there cannot take the app down. What it costs is a route list
+that has to stay in sync by hand.
+
+Two details that were measured rather than assumed:
+
+- The routes are **two patterns per page** — `podcasterium.com/roadmap` and
+  `podcasterium.com/roadmap/*` — not one `…/roadmap*`. A single trailing
+  wildcard also matches `/roadmapX`, and a static-assets Worker with no `main`
+  has no fallthrough: it answered **404** on a path the app would have served.
+  With the pair, `/roadmapX` reaches the SPA again.
+- The landing pulls in **no external URLs** (Astro `build.format: 'file'` plus
+  `inlineStylesheets: 'always'`, no client JavaScript). That is what keeps the
+  route list to the page paths themselves. A stylesheet, font or image added
+  later will 404 until its prefix is routed to that Worker too.
+
+Verified live on 22 Sep 2026: `/roadmap` and `/features` serve the pages,
+`/roadmap/` redirects to `/roadmap` (307 from the assets Worker, where the
+app's worker uses 301), `/roadmapX` and `/` reach the app, and `/c/abbacast`
+still server-renders. The routing contract is in that repo's `README.md`.
 
 What to know, paid for by experience (CLAUDE.md + `docs/web-delivery-and-rendering.md`):
 
