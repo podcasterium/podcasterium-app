@@ -58,3 +58,6 @@ pubspec.lock
 # Local secrets and identifiers (see .env.example for the expected keys)
 .env
 .env.local
+
+# wrangler local state from `wrangler pages deploy`
+.wrangler/
