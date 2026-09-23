@@ -16,7 +16,7 @@ keys outside the repo. Paths are from `domovina.ai` @ `cfb45aa`.*
 | Custom URL scheme | `ai.domovina://` | **`com.podcasterium://`** (mirrors the bundle ID, like upstream; confirmed 19 Sep 2026) | Used by the Supabase native OAuth/magic-link return; must be registered in the GoTrue allow-list |
 | Apple Team | `6SCK58757K` (ITalk d.o.o.) | **same team `6SCK58757K`** (decided 19 Sep 2026) | If same: AASA can carry both apps; passkeys share webcredentials only on the same domain (they don't). If new: new ASC API key, new agreements, new banking details |
 | App Store app id | `6781716801` | assigned when the app record is created — **still open**, the record cannot be created over the API (§8) | goes into `app_install_banner.dart` and the `apple-itunes-app` meta |
-| Play app | `ai.domovina` | new app in the same Play Console organization | Enable Play App Signing on the first upload |
+| Play app | **created** 23 Sep 2026 by the owner under **ITalk Ltd.** (Play account `7441230488937961517`, app `4973577890360482607`). The first AAB went up through the Developer API, not the console: a new app accepts an API upload as long as the release is `draft`; it was then promoted to `completed` on the internal track. All ten App content declarations and the store category (Entertainment) are done; the store graphics are not | `GET …/applications/com.podcasterium/edits/{id}/tracks/internal` |
 | Android upload keystore | `android/upload-keystore.jks`, alias `upload` | **generated 19 Sep 2026**, alias `upload` (§8) | Separate key per app; loss = reset via Play support |
 | RevenueCat | project with 2 store apps, entitlement `domovina_plus` | **project `Podcasterium` created 19 Sep 2026** with entitlement `podcasterium_plus` (§8) | An RC app is tied to the bundle ID; products are created in ASC/Play under the new app |
 | Supabase project | `api.domovina.ai` (self-hosted, Coolify) | **same project in phase 1** | See §5 — consequences for user data |
@@ -225,14 +225,14 @@ public by design — `assetlinks.json` publishes them.
 | Apple team | `6SCK58757K` (ITalk d.o.o.); it is the only seed ID across all 68 bundle IDs on the account | `GET /v1/bundleIds` with `scripts/asc-token.rb` |
 | Bundle ID `com.podcasterium` | **registered** 19 Sep 2026, record `MJMYPA86QA`, platform UNIVERSAL | `GET /v1/bundleIds` |
 | Its capabilities | `IN_APP_PURCHASE`, `ASSOCIATED_DOMAINS`, `APPLE_ID_AUTH` (PRIMARY_APP_CONSENT) — the same three `ai.domovina` carries | `GET /v1/bundleIds/MJMYPA86QA/bundleIdCapabilities` |
-| ASC app record | **not created.** The ASC API refuses it: *"The resource 'apps' does not allow 'CREATE'. Allowed operations are: GET_COLLECTION, GET_INSTANCE, UPDATE"*. Console only, and the browser profile is not signed in to App Store Connect | `POST /v1/apps` → HTTP 403 |
-| `iosAppStoreId` | still `'0'` in `lib/brand.dart`; it cannot be known before the app record exists | `grep iosAppStoreId lib/brand.dart` |
+| ASC app record | **created** 23 Sep 2026 by the owner in the console (the API refuses `POST /v1/apps`: *"The resource 'apps' does not allow 'CREATE'"*). App ID `6815415892`, SKU `com.podcasterium`, version `1.0.0`. Filled through the API the same day: listing text, URLs, categories, age rating (12+), price Free, availability (all territories except mainland China), App Review contact and notes; App Privacy published in the console | `GET /v1/apps/6815415892` |
+| `iosAppStoreId` | `'6815415892'` in `lib/brand.dart` | `grep iosAppStoreId lib/brand.dart` |
 | Android upload keystore | **generated** 19 Sep 2026: alias `upload`, RSA 2048, SHA384withRSA, `CN=Podcasterium`, valid until 4 Feb 2054. Not a copy of the DOMOVINA key | `keytool -list -v -keystore android/upload-keystore.jks` |
 | Upload key SHA-256 | `D3:86:8D:12:4F:7C:DD:27:71:01:12:09:AD:B6:DB:75:7D:5E:2F:11:8B:EE:78:1C:0F:21:44:F7:9D:53:A4:02` | as above |
 | Upload key SHA-1 | `FB:5D:6E:05:9A:CC:02:A3:D6:87:81:CB:32:19:35:B9:7A:88:C8:FF` — needed for the Google OAuth Android client | as above |
 | Release signing | wired and proven: an 86.6 MB AAB built from this shell carries `CN=Podcasterium` | `apksigner verify --print-certs build/app/outputs/bundle/release/app-release.aab` |
 | Play app | **not created** (owner decision 19 Sep 2026: wait for the name and icon). It goes under the same organization that holds `ai.domovina` — **ITalk Ltd.**, Play account `7441230488937961517`. The Play Developer API has no create-app call; the console is the only way | Play Console → app list |
-| `ANDROID_SHA256` binding | currently the **upload** key only. The Play App Signing fingerprint does not exist until the first upload, and `assetlinks.json` needs it first (§2 gotcha) | Play Console → App integrity |
+| `ANDROID_SHA256` binding | App Signing key `E9:C7:28:5E:9E:B7:C8:13:7E:29:03:B0:AD:C7:EE:ED:1D:25:8B:34:79:ED:EF:AC:95:31:4B:9F:68:AE:8C:A7` plus the upload key, comma-separated, on production and preview; redeployed 23 Sep 2026 and live in `assetlinks.json`. App Signing SHA-1 (for the Google OAuth Android client): `43:00:08:D9:90:75:74:57:AB:64:F1:D0:9F:7D:A8:5B:90:7B:7C:23` | `curl -s https://podcasterium.com/.well-known/assetlinks.json` |
 | RevenueCat | project `Podcasterium` (`proj9b6e08d9`), apps `Podcasterium (iOS)` / `Podcasterium (Android)`, entitlement `podcasterium_plus` — a separate project, not new apps in the DOMOVINA one | RC dashboard, or `list-projects` |
 | RC store credentials | **not configured** — the ASC API key and the Play service account must be uploaded per project in the dashboard; RC can only copy them between apps inside one project | RC → app settings |
 | RC products / offering | none yet; they follow the ASC and Play products (§6 steps 1–2) | — |
@@ -243,10 +243,11 @@ public by design — `assetlinks.json` publishes them.
 
 ### What blocks what
 
-1. **First Play upload** unlocks the App Signing SHA-256, which unlocks
-   `assetlinks.json`, which unlocks Android App Links verification.
-2. **The ASC app record** unlocks the App Store ID, `apple-itunes-app`, and
-   the subscription group.
+1. ~~**First Play upload**~~ — **done 23 Sep 2026**; the App Signing SHA-256
+   is in `assetlinks.json`, so Android App Links can verify.
+2. ~~**The ASC app record**~~ — **done 23 Sep 2026**; the App Store ID is in
+   the brand. `apple-itunes-app` waits for the app to go live (`05-…` step
+   10), and the subscription group waits for Plus (not in 1.0.0).
 3. ~~**The first web deploy**~~ — **done 21 Sep 2026**. AASA and assetlinks
    are live on the domain, so the Apple CDN can start caching the new `appID`
    ahead of the first TestFlight build (§3 gotcha), and Google OAuth branding
@@ -258,12 +259,11 @@ public by design — `assetlinks.json` publishes them.
    has no Play app yet, so nothing is at risk today, but a new app created
    after that date inherits the requirement.
 
-### Open question recorded here, not decided
+### Sign in with Apple grouping — decided 23 Sep 2026: not grouped
 
-`com.podcasterium` was registered with **`PRIMARY_APP_CONSENT`** for Sign in
-with Apple — it is its own primary app, not grouped with `ai.domovina`.
-Grouping would give one Apple user the same identifier in both apps, which
-matches the phase-1 decision to share `auth.users`; not grouping means the
-same person signs in as two different users. Changing the grouping later
-changes the identifier, so it costs nothing today (no users) and everything
-after launch. Decide before the first TestFlight build.
+`com.podcasterium` stays its own primary App ID with **`PRIMARY_APP_CONSENT`**.
+Grouping it under `ai.domovina` would have given one Apple user the same
+identifier in both apps, but Apple shows the *primary* app's icon, terms and
+privacy policy in the sign-in sheet, so Podcasterium users would have seen
+DOMOVINA.ai. The cost is that the same person signs in as two different users
+across the brands (`DECISIONS.md`, 23 Sep 2026).
