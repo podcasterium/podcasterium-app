@@ -17,8 +17,8 @@ const BrandConfig podcasteriumBrand = BrandConfig(
   urlScheme: 'com.podcasterium',
   androidPackage: 'com.podcasterium',
   iosBundleId: 'com.podcasterium',
-  // TODO(D-store): assigned when the App Store Connect record is created.
-  iosAppStoreId: '0',
+  // App Store Connect record created 23 Sep 2026.
+  iosAppStoreId: '6815415892',
   entitlement: 'podcasterium_plus',
   // TODO(D4): placeholder neutral palette until colours are decided.
   seed: Color(0xFF2B4C7E),
