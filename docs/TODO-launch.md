@@ -13,8 +13,8 @@ Items marked **assistant** can be done in a session.
 
 | Item | State |
 | :-- | :-- |
-| App Store 1.0.0 | build 4 (real app icon) attached, release type MANUAL. Subscriptions `podcasterium_plus_monthly` / `_yearly` are READY_TO_SUBMIT and sit in a draft submission |
-| Google Play 1.0.0 (3) | production release saved, 177 countries, **not in review**: the pre-review check failed on "Missing sign in details" |
+| App Store 1.0.0 | **in review** since 24 Sep 2026 with build 4 (real app icon), release type MANUAL. Subscriptions `podcasterium_plus_monthly` / `_yearly` are READY_TO_SUBMIT and sit in a draft submission |
+| Google Play 1.0.0 (3) | resubmitted 24 Sep 2026 with sign-in details for the review account; in pre-review checks, then review |
 | RevenueCat | products, entitlement `podcasterium_plus`, offering `default`, store credentials for iOS and Android: all done and validated |
 | Core (`feat/podcast-core`) | 6 white-label fixes committed, unpushed; `featuredChannels` on branch `feat/featured-channels` (worktree `~/git/domovinatv/.podcast-core-featured`), not merged |
 
@@ -69,7 +69,7 @@ Items marked **assistant** can be done in a session.
    (`grant-customer-entitlement`, entitlement `podcasterium_plus`, lifetime
    or until 31 Dec 2026). Google does not buy subscriptions or use trials
    during review.
-5. **owner — Play sign-in details.** First make the review account
+5. ~~**owner — Play sign-in details.**~~ — done 24 Sep 2026; changes resubmitted, Play runs its pre-review checks and then the review. First make the review account
    usable by a stranger on a new device: remove the passkey and 2-step
    verification from `podcasteriumsync@gmail.com`, set a long unique
    password, and keep a recovery e-mail you control. Google's reviewers sign
@@ -83,7 +83,7 @@ Items marked **assistant** can be done in a session.
    overview → Submit changes for review.
 6. ~~**assistant — attach build 4** to App Store version 1.0.0~~ — done
    24 Sep 2026 (replaced build 3, which had the Flutter icon).
-7. **owner — App Store submission.** In App Store Connect: optionally add
+7. ~~**owner — App Store submission.**~~ — done 24 Sep 2026: version 1.0.0 (build 4), both subscriptions and the group submitted together ("4 Items Submitted"). App Privacy and Play Data safety already declared Purchase History, so neither changed. In App Store Connect: optionally add
    the review account under App Review Information → Sign-in required. Then
    subscription group *Podcasterium Plus* → Add for Review → Draft
    Submission (1); version 1.0.0 → Add for Review into the same draft;
