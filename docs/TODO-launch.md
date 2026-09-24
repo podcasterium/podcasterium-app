@@ -13,7 +13,7 @@ Items marked **assistant** can be done in a session.
 
 | Item | State |
 | :-- | :-- |
-| App Store 1.0.0 | build 3 attached, release type MANUAL; build 4 (real app icon) uploaded and processing. Subscriptions `podcasterium_plus_monthly` / `_yearly` are READY_TO_SUBMIT and sit in a draft submission |
+| App Store 1.0.0 | build 4 (real app icon) attached, release type MANUAL. Subscriptions `podcasterium_plus_monthly` / `_yearly` are READY_TO_SUBMIT and sit in a draft submission |
 | Google Play 1.0.0 (3) | production release saved, 177 countries, **not in review**: the pre-review check failed on "Missing sign in details" |
 | RevenueCat | products, entitlement `podcasterium_plus`, offering `default` done; **no store credentials** |
 | Core (`feat/podcast-core`) | 6 white-label fixes committed, unpushed; `featuredChannels` on branch `feat/featured-channels` (worktree `~/git/domovinatv/.podcast-core-featured`), not merged |
@@ -43,8 +43,8 @@ Items marked **assistant** can be done in a session.
    instruction: *"Tap Sign in, choose Sign in with Google and use the account
    above. The account already has Podcasterium Plus."* Save, then Publishing
    overview → Submit changes for review.
-6. **assistant — attach build 4** to App Store version 1.0.0 once it is
-   `VALID` (replaces build 3, which still has the Flutter icon).
+6. ~~**assistant — attach build 4** to App Store version 1.0.0~~ — done
+   24 Sep 2026 (replaced build 3, which had the Flutter icon).
 7. **owner — App Store submission.** In App Store Connect: optionally add
    the review account under App Review Information → Sign-in required. Then
    subscription group *Podcasterium Plus* → Add for Review → Draft
