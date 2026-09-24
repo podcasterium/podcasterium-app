@@ -1,5 +1,28 @@
 package com.podcasterium
 
-import io.flutter.embedding.android.FlutterActivity
+import android.content.pm.PackageManager
+import com.ryanheise.audioservice.AudioServiceActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodChannel
 
-class MainActivity : FlutterActivity()
+// Extends AudioServiceActivity (not FlutterActivity) so the audio_service
+// plugin can attach its FlutterEngine for background playback.
+class MainActivity : AudioServiceActivity() {
+    // Brand-neutral channel the core's TV mode detection calls.
+    private val tvModeChannel = "app/tv_mode"
+
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, tvModeChannel)
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "isLeanback" -> {
+                        val isTv = packageManager
+                            .hasSystemFeature(PackageManager.FEATURE_LEANBACK)
+                        result.success(isTv)
+                    }
+                    else -> result.notImplemented()
+                }
+            }
+    }
+}
