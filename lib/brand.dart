@@ -41,4 +41,7 @@ const BrandConfig podcasteriumBrand = BrandConfig(
   sourceCodeUrl: 'https://github.com/podcasterium/podcasterium-app',
   // Plus is sold as monthly and yearly only (docs/DECISIONS.md, 24 Sep 2026).
   plusLifetime: false,
+  // English-language shows in the shared corpus, surfaced first on the
+  // home page, the channel list and the search chips.
+  featuredChannels: ['subclub', 'launched', 'catholic_futurist'],
 );
