@@ -161,15 +161,24 @@ Promote to production only after 1.0.0 is approved on that store.
 
 ## Known gaps, not blocking
 
-- **Person pages and semantic search fail on the web.** `mcp.domovina.ai`
-  (`domovina-rag`, `services/mcp/src/config.ts`) reflects CORS only for
-  origins in `PUBLIC_SEARCH_ALLOWED_ORIGINS`, whose default lists the
-  domovina.ai origins. `podcasterium.com` gets a 200 without
-  `Access-Control-Allow-Origin`, the browser drops it, and `/p/<slug>` shows
-  "Person not found" (measured 24 Sep 2026 with `curl -H "Origin: …"`). The
-  iOS and Android apps are not affected (no CORS). Fix: add
-  `https://podcasterium.com` and `https://www.podcasterium.com` to the
-  allow-list and redeploy `domovina-rag`.
+- ~~**Person pages and semantic search fail on the web.**~~ — fixed
+  24 Sep 2026: `mcp.domovina.ai` (`domovina-rag` `b8f0063`) now reflects
+  CORS for `https://podcasterium.com` and `https://www.podcasterium.com`;
+  it used to return 200 without `Access-Control-Allow-Origin`, and
+  `/p/<slug>` showed "Person not found". Native apps were never affected.
+- **Magisterium score badge leaked** onto the channel episode list (church
+  icon with a score), because the shared corpus sends `magisterium_score`
+  in the channel and person JSON. Fixed in core `1eeee2a`, which is **not in
+  build 6**; it ships with the next build.
+- **Missing thumbnails.** Recent non-YouTube episodes of `subclub` (3 of the
+  latest 15) and `launched` (8 of 15) have no
+  `cdn.domovina.ai/images/<id>/thumbnail.png` (404), so the home carousel
+  and the "Featured shows" rail show empty cards. Backend work.
+- **English UI shows translated titles.** With the EN toggle on, Sub Club
+  episodes are titled in Croatian ("Skaliranje Meta oglasa…"), the
+  translation, instead of their English originals.
+- **iPad episode screen:** the "Contents" side panel draws under the status
+  bar; player chapters stay Croatian when the article is switched to EN.
 - **Cache purge fails.** `CLOUDFLARE_PURGE_TOKEN` in `.env` is still the
   DOMOVINA zone token (`"success":false` on 24 Sep 2026); create a token
   scoped to the podcasterium.com zone.

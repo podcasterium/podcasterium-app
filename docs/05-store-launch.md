@@ -145,6 +145,32 @@ chapters → article → search → channels → channel detail). Screenshot
 `02-magisterium-ai.png` has no 1:1 replacement — the proposal is the person
 hub ("speaks / is mentioned"), because that is the differentiator that remains.
 
+**Current set (24 Sep 2026)** — `store-assets/{ios-iphone,ios-ipad}/`,
+01-home, 02-player, 03-article, 04-search, 05-person, 06-channel. Built
+around the DOMOVINA TV channel (`/c/domovina-tv`), whose host is the owner,
+so no third party appears on a person page without consent: player and
+English article of `fO7iltytw0I`, the person page `/p/matija-stepanic`, a
+keyword search for "liberland" with the DOMOVINA TV episode on top. Android
+has no new set yet (no device and no emulator image on the build Mac).
+
+How it was driven, on iPhone 17 Pro Max (1320×2868) and iPad Pro 13" M5
+(2064×2752) simulators with a debug build (`flutter run
+--dart-define-from-file=…`):
+
+- `xcrun simctl status_bar <udid> override --time 9:41 …` for a clean bar.
+- Navigation by universal link: `xcrun simctl openurl <udid>
+  https://podcasterium.com/<route>` opens the app on that route directly
+  (the `com.podcasterium://` scheme needs an extra "Open" tap).
+- Taps: a small Swift CGEvent click helper plus the Simulator window frame
+  from System Events. Turn off Window → Show Device Bezels first; the screen
+  then fills the window width below the toolbar, which makes the mapping
+  exact. Run one simulator at a time, overlapping windows swallow clicks.
+- Text: `keystroke` goes through autocorrect ("liberland" became
+  "libel and"). Put the text on the simulator's pasteboard with
+  `xcrun simctl pbcopy <udid>` and press ⌘V in the field instead.
+- The home carousel rotates; capture several frames and keep one whose
+  slide has an image (recent Sub Club and Launched episodes have none).
+
 ---
 
 ## 7. Compliance documents that need the new domain
