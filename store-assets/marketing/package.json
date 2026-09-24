@@ -1,0 +1,12 @@
+{
+  "name": "podcasterium-store-marketing",
+  "private": true,
+  "description": "Renders the captioned store screenshots from store-assets/ios-* with headless Chromium.",
+  "type": "module",
+  "scripts": {
+    "render": "node render.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.58.2"
+  }
+}

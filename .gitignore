@@ -61,3 +61,4 @@ pubspec.lock
 
 # wrangler local state from `wrangler pages deploy`
 .wrangler/
+store-assets/marketing/node_modules/

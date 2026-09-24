@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Podcasterium store frames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=block" rel="stylesheet">
+<style>
+  /* Palette follows lib/brand.dart: seed #2B4C7E, accent #D97706. */
+  :root {
+    --navy-900: #0b1424;
+    --navy-800: #111f38;
+    --navy-600: #2b4c7e;
+    --amber: #d97706;
+    --amber-soft: #f5a524;
+    --ink: #f6f3ec;
+    --ink-muted: #b8c2d6;
+  }
+  html, body { margin: 0; padding: 0; background: var(--navy-900); }
+  #canvas {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 60% at 20% 0%, rgba(43, 76, 126, 0.55), transparent 60%),
+      linear-gradient(180deg, var(--navy-800) 0%, var(--navy-900) 70%);
+  }
+  svg.ribbon { position: absolute; inset: 0; pointer-events: none; }
+  .frame { position: absolute; top: 0; overflow: visible; }
+  .caption { position: absolute; left: 7%; right: 7%; text-align: center; }
+  .kicker {
+    font: 600 var(--k) / 1 Inter, sans-serif;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--amber-soft);
+  }
+  .title {
+    font: 700 var(--t) / 1.08 'Playfair Display', serif;
+    color: var(--ink);
+    margin-top: 0.35em;
+    text-wrap: balance;
+  }
+  .sub {
+    font: 400 var(--s) / 1.35 Inter, sans-serif;
+    color: var(--ink-muted);
+    margin-top: 0.7em;
+    text-wrap: balance;
+  }
+  .device {
+    position: absolute;
+    background: #05070c;
+    box-shadow:
+      0 0 0 2px rgba(255, 255, 255, 0.09),
+      0 40px 120px rgba(0, 0, 0, 0.55),
+      0 0 180px rgba(217, 119, 6, 0.12);
+  }
+  .screen { position: absolute; overflow: hidden; background: #000; }
+  .screen img { position: absolute; left: 0; width: 100%; display: block; }
+  .punch {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    border-radius: 50%; background: #05070c; box-shadow: 0 0 0 3px #1b1f27;
+  }
+</style>
+</head>
+<body>
+<div id="canvas"></div>
+<script type="module">
+  import { FRAMES, DEVICES } from './frames.js';
+
+  const q = new URLSearchParams(location.search);
+  const d = DEVICES[q.get('device') ?? 'iphone'];
+  const only = q.has('frame') ? Number(q.get('frame')) : null;
+  const W = d.width, H = d.height;
+  const indices = only === null ? FRAMES.map((_, i) => i) : [only];
+
+  const canvas = document.getElementById('canvas');
+  canvas.style.width = `${W * indices.length}px`;
+  canvas.style.height = `${H}px`;
+
+  // One ribbon across the whole set, so neighbouring frames join into a
+  // panorama. A single-frame render draws its own slice of the same curve.
+  const total = W * FRAMES.length;
+  const offset = only === null ? 0 : -only * W;
+  const pts = [];
+  for (let x = 0; x <= total; x += W / 8) {
+    const y = H * (0.62 + 0.16 * Math.sin((x / W) * Math.PI * 0.9 + 0.6));
+    pts.push([x + offset, y]);
+  }
+  const path = pts.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
+  canvas.insertAdjacentHTML('beforeend', `
+    <svg class="ribbon" width="${W * indices.length}" height="${H}">
+      <defs>
+        <linearGradient id="g" x1="0" x2="1">
+          <stop offset="0" stop-color="#d97706" stop-opacity="0.0"/>
+          <stop offset="0.15" stop-color="#d97706" stop-opacity="0.55"/>
+          <stop offset="0.85" stop-color="#f5a524" stop-opacity="0.55"/>
+          <stop offset="1" stop-color="#f5a524" stop-opacity="0.0"/>
+        </linearGradient>
+      </defs>
+      <path d="${path}" fill="none" stroke="url(#g)" stroke-width="${W * 0.16}" stroke-linecap="round" opacity="0.5"/>
+      <path d="${path}" fill="none" stroke="#f5a524" stroke-width="${W * 0.006}" opacity="0.8"/>
+    </svg>`);
+
+  const shotSrc = (name) => `../${d.source}/${name}.jpg`;
+  const frames = [];
+
+  indices.forEach((fi, slot) => {
+    const f = FRAMES[fi];
+    const frame = document.createElement('div');
+    frame.className = 'frame';
+    Object.assign(frame.style, { left: `${slot * W}px`, width: `${W}px`, height: `${H}px` });
+    frame.style.setProperty('--k', `${W * 0.028}px`);
+    frame.style.setProperty('--t', `${W * (d === DEVICES.ipad ? 0.058 : 0.074)}px`);
+    frame.style.setProperty('--s', `${W * (d === DEVICES.ipad ? 0.024 : 0.033)}px`);
+
+    const cap = document.createElement('div');
+    cap.className = 'caption';
+    cap.style.top = `${H * 0.055}px`;
+    cap.innerHTML = `<div class="kicker">${f.kicker}</div><div class="title">${f.title}</div><div class="sub">${f.sub}</div>`;
+    frame.appendChild(cap);
+    canvas.appendChild(frame);
+    frames.push({ f, frame, cap });
+  });
+
+  await document.fonts.ready;
+  // Every device in the set sits at the same height, just below the tallest
+  // caption, so no subtitle is ever covered.
+  const captionBottom = Math.max(...frames.map(({ cap }) => cap.offsetTop + cap.offsetHeight));
+  const deviceTop = Math.max(H * d.top, captionBottom + H * 0.035);
+
+  await Promise.all(frames.map(({ f, frame }) => {
+    // Device body: screen aspect comes from the capture minus the cropped top.
+    const dw = W * d.deviceWidth;
+    const bez = W * d.bezel;
+    const img = new Image();
+    img.src = shotSrc(f.shot);
+    return img.decode().then(() => {
+      const sw = dw - 2 * bez;
+      const scale = sw / img.naturalWidth;
+      const sh = (img.naturalHeight - d.cropTop) * scale;
+      const device = document.createElement('div');
+      device.className = 'device';
+      Object.assign(device.style, {
+        left: `${(W - dw) / 2}px`, top: `${deviceTop}px`,
+        width: `${dw}px`, height: `${sh + 2 * bez}px`,
+        borderRadius: `${dw * d.radius}px`,
+      });
+      const screen = document.createElement('div');
+      screen.className = 'screen';
+      Object.assign(screen.style, {
+        left: `${bez}px`, top: `${bez}px`, width: `${sw}px`, height: `${sh}px`,
+        borderRadius: `${dw * d.radius - bez}px`,
+      });
+      img.style.top = `${-d.cropTop * scale}px`;
+      screen.appendChild(img);
+      device.appendChild(screen);
+      if (d.cropTop > 0) {
+        // Android: the iOS status bar is cropped; a punch-hole camera marks
+        // the device instead.
+        const p = document.createElement('div');
+        p.className = 'punch';
+        const r = W * 0.028;
+        Object.assign(p.style, { width: `${r}px`, height: `${r}px`, top: `${bez * 1.6}px` });
+        device.appendChild(p);
+      }
+      frame.appendChild(device);
+    });
+  }));
+  document.body.dataset.ready = '1';
+</script>
+</body>
+</html>

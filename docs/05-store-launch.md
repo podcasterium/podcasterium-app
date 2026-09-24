@@ -171,6 +171,25 @@ How it was driven, on iPhone 17 Pro Max (1320×2868) and iPad Pro 13" M5
 - The home carousel rotates; capture several frames and keep one whose
   slide has an image (recent Sub Club and Launched episodes have none).
 
+**Captioned store frames** — `store-assets/marketing/`: an HTML/CSS page
+(`page.html`) with captions in `frames.js`, rendered by headless Chromium
+(`render.mjs`, Playwright) into `out/{iphone,ipad,android}/`, 1320×2868,
+2064×2752 and 1080×1920 JPEGs. These, not the raw captures, are what gets
+uploaded. iPhone and iPad render as one wide panorama cut into frames, so
+the amber ribbon joins across neighbouring screenshots on the App Store;
+Android renders frame by frame, because Play shows screenshots with gaps.
+Android reuses the iPhone captures with the iOS status bar cropped.
+
+```bash
+cd store-assets/marketing && npm install && npm run render
+# reuse a cached Chromium instead of downloading one:
+CHROMIUM_PATH=~/Library/Caches/ms-playwright/chromium_headless_shell-1223/chrome-headless-shell-mac-arm64/chrome-headless-shell npm run render
+```
+
+Caption rules: every claim visible in the app, counts rounded down only,
+no other store or platform named (App Store guideline 2.3.10), no "#1",
+"best", "free" or prices (Play metadata policy).
+
 ---
 
 ## 7. Compliance documents that need the new domain
