@@ -62,10 +62,10 @@ Items marked **assistant** can be done in a session.
    sees an error.
 2. ~~**assistant — verify the credentials**~~ — done 24 Sep 2026: with the RevenueCat MCP
    (`validate-app-credentials`) once they are uploaded.
-3. **owner — review account.** Create a dedicated Google account for store
+3. ~~**owner — review account.**~~ — done 24 Sep 2026: `podcasteriumsync@gmail.com`, Supabase user `aee8c846-3073-4a09-bf83-022764d8c6cb`. Create a dedicated Google account for store
    review (for example `podcasterium.review@gmail.com`), then sign in to the
    app once with "Sign in with Google" so the user exists.
-4. **assistant — grant Plus to the review account** with the RevenueCat MCP
+4. ~~**assistant — grant Plus to the review account**~~ — done 24 Sep 2026, promotional `podcasterium_plus` until 1 Jan 2027. The customer had to be created first with `GET /v1/subscribers/<uuid>` (public SDK key), because a web sign-in never reaches RevenueCat. with the RevenueCat MCP
    (`grant-customer-entitlement`, entitlement `podcasterium_plus`, lifetime
    or until 31 Dec 2026). Google does not buy subscriptions or use trials
    during review.
@@ -109,6 +109,14 @@ Items marked **assistant** can be done in a session.
     English-language episodes is backend work in `domovina-api`.
 
 ## Known gaps, not blocking
+
+- **Web is stale.** `podcasterium.com` serves version 0.1.0+1 from commit
+  `7b1388b` (23 Sep 2026), without today's core fixes (Croatian default UI,
+  DOMOVINA footer text, paywall). Redeploy per `docs/04-build-and-deploy.md`
+  §2 — needs the owner's go-ahead, it is a production deploy.
+- **No purchase on the web.** The RevenueCat SDK runs only in the iOS and
+  Android apps; the web paywall falls back to indicative tiles because
+  `RC_WEB_CHECKOUT_URL` (RevenueCat Web Billing) is not configured.
 
 - **Web Plus.** `EntitlementService.isPlus` is the Supabase subscription
   row OR the RevenueCat CustomerInfo on mobile. The RevenueCat webhook is
