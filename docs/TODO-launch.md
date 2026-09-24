@@ -115,6 +115,18 @@ Items marked **assistant** can be done in a session.
     Find which episodes already have English articles; producing them for
     English-language episodes is backend work in `domovina-api`.
 
+15. **assistant — password sign-in for the review account.** A
+    low-key "Sign in with password" path in the auth sheet (Supabase
+    `signInWithPassword`) for one account such as `review@podcasterium.com`,
+    with promotional Plus. Then Play's Sign in details and Apple's demo
+    account use it, and `podcasteriumsync@gmail.com` can get its passkey and
+    2-step verification back. Until then that Google account must stay
+    password-only, and its password must match the Play declaration: Google
+    re-reviews every update and may re-check at any time.
+16. **owner — renew the review account's promotional Plus** before
+    1 Jan 2027 (RevenueCat → customer
+    `aee8c846-3073-4a09-bf83-022764d8c6cb` → grant entitlement).
+
 ## Known gaps, not blocking
 
 - ~~**Web is stale.**~~ — redeployed 24 Sep 2026: `podcasterium.com` serves 1.0.0+4 with the core fixes; `/`, `assetlinks.json` and the AASA return 200.
