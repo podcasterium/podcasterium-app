@@ -14,7 +14,7 @@ Items marked **assistant** can be done in a session.
 | Item | State |
 | :-- | :-- |
 | App Store 1.0.0 | **in review** since 24 Sep 2026 with build 4 (real app icon), release type MANUAL. Subscriptions `podcasterium_plus_monthly` / `_yearly` are READY_TO_SUBMIT and sit in a draft submission |
-| Google Play 1.0.0 (3) | resubmitted 24 Sep 2026 with sign-in details for the review account; in pre-review checks, then review |
+| Google Play 1.0.0 (5) | in review since 24 Sep 2026 (review restarted to replace build 3): Android shell wired for OAuth return, background audio, TV; review account has promotional Plus |
 | RevenueCat | products, entitlement `podcasterium_plus`, offering `default`, store credentials for iOS and Android: all done and validated |
 | Core (`feat/podcast-core`) | 6 white-label fixes committed, unpushed; `featuredChannels` on branch `feat/featured-channels` (worktree `~/git/domovinatv/.podcast-core-featured`), not merged |
 
@@ -108,8 +108,7 @@ Items marked **assistant** can be done in a session.
 12. **assistant — merge `feat/featured-channels` into `feat/podcast-core`**
     and set `featuredChannels: ['subclub', 'launched', 'catholic_futurist']`
     in `lib/brand.dart`.
-13. **assistant — Play build 4** (real launcher icon) as the first Play
-    update, together with item 12.
+13. ~~**assistant — Play build 4**~~ — superseded: build 5 (real launcher icon and the Android shell fixes) replaced build 3 in the first review.
 14. **assistant — check for English articles.** Featured English shows still
     have Croatian articles and chapter titles; the route `/v/:id/en` exists.
     Find which episodes already have English articles; producing them for
@@ -140,9 +139,15 @@ Items marked **assistant** can be done in a session.
   on iOS and Android but not on `podcasterium.com`.
 - **Push the commits.** This repository and the core branch are unpushed;
   the core is still to be published under a tag (upstream step A7).
-- **Android TV** has no Leanback banner in the manifest; the TV form factor
-  is not declared on Play yet.
-- **Android release not run on a device.** Build 3 was not smoke-tested on a
-  phone; the local emulator has no system image installed.
+- **Android TV** is supported by build 5 (Leanback entry, banner), but the TV
+  form factor is not opted in on Play (Advanced settings → Form factors);
+  that needs TV screenshots and triggers a separate TV review.
+- **Android release not run on a device.** Build 5 was not smoke-tested on a
+  phone (sign-in, purchase, background audio); the local emulator has no
+  system image installed. Do it from the internal track before the Play
+  review ends.
+- **Sign-in was broken until 24 Sep 2026 22:00 CEST** on every platform: the
+  GoTrue allow-list for Podcasterium was committed but never deployed
+  (`docs/03` §8). Now live; iOS build 4 in review works without a rebuild.
 - **App icon and palette are placeholders** until decision D4.
 - `widget_test.dart` in the core fails without network (pre-existing).
