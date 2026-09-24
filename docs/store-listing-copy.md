@@ -5,11 +5,12 @@ when one changes, the other changes the same day (rule inherited from
 upstream `docs/payments/store-listing-copy.md`).
 
 Written for **version 1.0 (phase 1)**: the DOMOVINA corpus under a new brand,
-English interface, no subscription. `06-backend-and-corpus.md` §6 limits what
-phase 1 may promise, and `05-store-launch.md` §5 lists the words that must not
-appear. In particular the text says plainly that today's archive is
+English interface, with Plus as an optional subscription (decided 24 Sep 2026,
+`DECISIONS.md`). `06-backend-and-corpus.md` §6 limits what phase 1 may
+promise, and `05-store-launch.md` §5 lists the words that must not appear. In
+particular the text says plainly that today's archive is mostly
 Croatian-language podcasts; it does not promise "any podcast" or "any
-language", and it does not mention Plus.
+language", and it names only the two Plus benefits that exist.
 
 ---
 
@@ -19,7 +20,7 @@ language", and it does not mention Plus.
 | :-- | :-- |
 | App name | `Podcasterium` |
 | Primary language | en-US |
-| Price | Free, no in-app purchases in 1.0 |
+| Price | Free; Plus subscription monthly or yearly, 7-day free trial (App Store USD 3.99 / 34.99, EUR 4.99 / 39.99; Play converted from USD with DOMOVINA's euro prices) |
 | Age rating | Apple 12+ (third-party podcasts may touch mature topics); Play target audience 13+ |
 | Apple category | Primary: Entertainment · Secondary: Education |
 | Play category | Entertainment |
@@ -71,16 +72,21 @@ WHAT YOU CAN DO
 
 ABOUT THE ARCHIVE TODAY
 
-The current archive is a curated collection of Croatian-language podcasts. The app interface is in English; episode articles and transcripts follow the language of the episode. More podcasts and languages are planned, but they are not in this version.
+The current archive is a curated collection of mostly Croatian-language podcasts, plus a few English-language shows such as Sub Club by RevenueCat. The app interface is in English and Croatian; episode articles and chapter titles are currently written in Croatian. More podcasts and languages are planned, but they are not in this version.
 
 AI-GENERATED CONTENT
 
 Articles, summaries, chapters and speaker labels are generated automatically and may contain mistakes. The original episode is always one tap away.
 
-Podcasterium is free. Signing in is optional and only needed to sync favourites and progress across devices.
+PODCASTERIUM PLUS
+
+Everything above is free. Podcasterium Plus is an optional subscription that today gives you 30 search results instead of 12 and a supporter badge, and supports the development and running costs of the archive. It is offered monthly or yearly, each with a 7-day free trial for new subscribers. Payment is charged to your App Store or Google Play account; the subscription renews automatically unless cancelled at least 24 hours before the end of the current period, and you can manage or cancel it in your store account settings. Buying Plus requires signing in, so the subscription follows you across devices.
+
+Signing in is otherwise optional and only needed to sync favourites and progress across devices.
 
 Privacy: https://podcasterium.com/privacy
 Terms: https://podcasterium.com/terms
+Apple Standard EULA: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 ```
 
 **App Review notes**
@@ -90,7 +96,9 @@ The app works without signing in; every feature reviewed can be reached logged o
 
 Media is streamed from the operator's own CDN (cdn.domovina.ai, shared with the operator's app DOMOVINA.ai). Where a YouTube video is shown, it uses the official youtube-nocookie embedded player; the app does not extract YouTube streams and does not strip ads. Its own value is the processing on top of each episode: chapters, a speaker-labelled transcript, an article per chapter, and keyword and semantic search across the archive.
 
-The current archive is Croatian-language podcasts; the interface is English.
+The current archive is mostly Croatian-language podcasts; the interface is English.
+
+In-app purchase: Podcasterium Plus (podcasterium_plus_monthly, podcasterium_plus_yearly), each with a 7-day free trial. Open the account menu or any "Plus" prompt to reach the paywall. Buying requires signing in, and Sign in with Apple works for that; no demo account is needed. Plus unlocks 30 instead of 12 search results and a supporter badge, nothing else.
 ```
 
 ---
