@@ -215,6 +215,23 @@ rediscover it. State of the records themselves: `03-…` §8.
 - The version record the console creates is `1.0`; it was renamed to `1.0.0`
   so it matches `CFBundleShortVersionString`.
 
+**First production submission (24 Sep 2026)**
+
+- A subscription stays `MISSING_METADATA`, and the console refuses "Add for
+  Review" with *"You must add a subscription price"*, until it has a price in
+  **every** territory, including mainland China where the app is not sold.
+  DOMOVINA has 175 prices; Podcasterium had 174 until the CHN price was added.
+- The first subscriptions go through a *draft submission*: each subscription,
+  the subscription group and the app version are added to the same draft,
+  then "Submit for Review". The version page shows no in-app purchase section
+  in the current console.
+- Play: while the app is a *draft app*, the API accepts a production release
+  only with `status: draft`. Countries (177, "rest of world" included) and
+  "Send for review" are console steps; quick checks run for up to 14 minutes
+  before the review starts.
+- Play screenshots were the iPhone captures cropped to 2:1 without the iOS
+  status bar; the local emulator had no system image installed.
+
 **Building the shell**
 
 - The upstream `main` checkout has no `packages/podcast_core`; the core lives
