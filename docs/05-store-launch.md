@@ -178,3 +178,49 @@ web deploy.
 | Telegram bot token | `.env` | regenerable; **never** straight to the Telegram API — through `telegram-notify.rb` |
 
 Never in the repo. Never on Desktop/Downloads (a July TODO that still holds).
+
+---
+
+## 7. Measured while filling the Podcasterium records (23–24 Sep 2026)
+
+What the first pass through both consoles taught, so the next brand does not
+rediscover it. State of the records themselves: `03-…` §8.
+
+**Google Play**
+
+- A brand-new app **accepts its first AAB through the Developer API** when
+  the track release is `status: draft`. A second edit then sets it to
+  `completed` on `internal`. No console upload was needed, contrary to the
+  common advice.
+- The App Signing page now shows a "Classical" and a "Post-quantum" key; the
+  fingerprints are only reachable through the copy buttons. `assetlinks.json`
+  takes the **Classical** SHA-256, plus the upload key for sideloaded builds.
+- All ten App content declarations are console-only. The IARC questionnaire
+  answers that mirror Apple's 12+ (mild, spoken-only violence, language and
+  drug references; online content yes) produced ESRB Teen, PEGI 3, USK 12.
+- "Send for review" stays locked until the store graphics exist; internal
+  testing works without it.
+
+**App Store Connect**
+
+- The API covers listing text, URLs, categories, the age-rating declaration,
+  price (`appPriceSchedules`, free point in `USA`), availability
+  (`POST /v2/appAvailabilities` with every territory, then mainland China
+  switched off because it needs an ICP filing), App Review details, the
+  content-rights declaration and attaching a build.
+- It does **not** cover App Privacy, Sign in with Apple grouping, or adding an
+  internal TestFlight tester (`POST /betaTesters` returns 500, adding an
+  existing tester to the group returns 409). All three were done in the
+  browser.
+- The version record the console creates is `1.0`; it was renamed to `1.0.0`
+  so it matches `CFBundleShortVersionString`.
+
+**Building the shell**
+
+- The upstream `main` checkout has no `packages/podcast_core`; the core lives
+  on `feat/podcast-core`. The shell was built from a worktree of that branch
+  (`../domovinatv/.podcast-core`), pointed at by the git-ignored
+  `pubspec_overrides.yaml`.
+- The iOS project still had `flutter create` defaults (foreign team, no
+  entitlements, no URL scheme); fixed in commit `5dc4c50`. Build 1.0.0 (2)
+  took 93 s to archive and was `VALID` about 3.5 minutes after upload.
