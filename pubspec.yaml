@@ -3,7 +3,7 @@ description: "Podcasterium — watch, listen to and read podcasts. Thin white-la
 publish_to: 'none'
 
 # Application version. The core package is versioned separately by git tag.
-version: 1.0.0+4
+version: 1.0.0+5
 
 environment:
   sdk: ^3.11.4
