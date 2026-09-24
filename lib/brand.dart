@@ -38,4 +38,7 @@ const BrandConfig podcasteriumBrand = BrandConfig(
   ),
   // Everything domain-specific is off in phase 1 (docs/06 §3).
   flags: FeatureFlags(),
+  sourceCodeUrl: 'https://github.com/podcasterium/podcasterium-app',
+  // Plus is sold as monthly and yearly only (docs/DECISIONS.md, 24 Sep 2026).
+  plusLifetime: false,
 );
