@@ -15,12 +15,12 @@ Items marked **assistant** can be done in a session.
 | :-- | :-- |
 | App Store 1.0.0 | build 4 (real app icon) attached, release type MANUAL. Subscriptions `podcasterium_plus_monthly` / `_yearly` are READY_TO_SUBMIT and sit in a draft submission |
 | Google Play 1.0.0 (3) | production release saved, 177 countries, **not in review**: the pre-review check failed on "Missing sign in details" |
-| RevenueCat | products, entitlement `podcasterium_plus`, offering `default` done; **no store credentials** |
+| RevenueCat | products, entitlement `podcasterium_plus`, offering `default`, store credentials for iOS and Android: all done and validated |
 | Core (`feat/podcast-core`) | 6 white-label fixes committed, unpushed; `featuredChannels` on branch `feat/featured-channels` (worktree `~/git/domovinatv/.podcast-core-featured`), not merged |
 
 ## Blocking the launch — in this order
 
-1. **owner — RevenueCat store credentials.** Dashboard:
+1. ~~**owner — RevenueCat store credentials.**~~ — done 24 Sep 2026; all three validated as `valid` through the RevenueCat MCP (the dashboard's own check had first flagged the In-App Purchase key; the MCP check passed). Dashboard:
    `https://app.revenuecat.com/projects/9b6e08d9/apps`. Three uploads; the
    key files never go into this repository.
 
@@ -60,7 +60,7 @@ Items marked **assistant** can be done in a session.
 
    Without a) and c) no purchase is verified, and a reviewer who tests Plus
    sees an error.
-2. **assistant — verify the credentials** with the RevenueCat MCP
+2. ~~**assistant — verify the credentials**~~ — done 24 Sep 2026: with the RevenueCat MCP
    (`validate-app-credentials`) once they are uploaded.
 3. **owner — review account.** Create a dedicated Google account for store
    review (for example `podcasterium.review@gmail.com`), then sign in to the
