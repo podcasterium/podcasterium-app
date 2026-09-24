@@ -126,6 +126,18 @@ Items marked **assistant** can be done in a session.
     1 Jan 2027 (RevenueCat → customer
     `aee8c846-3073-4a09-bf83-022764d8c6cb` → grant entitlement).
 
+17. **assistant — ship the Plus cold-start fix in 1.0.1.** Core commit
+    `31f5f51` on `feat/podcast-core`: `EntitlementService.init()` now seeds
+    from `RevenueCatService.optimisticPlus`. The builds in review (iOS 4,
+    Android 5) show "Get Podcasterium Plus" to a Plus user after a cold start
+    with a restored session; a fresh sign-in (the reviewer's path) shows Plus
+    correctly. Verified fixed in the simulator on 24 Sep 2026.
+18. **assistant — passkey hint names DOMOVINA.** The account screen's
+    passkey help text says "turn it off for domovina.ai"
+    (`authPasskeyHintBody`); make it brand-driven. Passkeys have no Corbado
+    project for Podcasterium yet (`docs/03` §8), so "Add a passkey" may fail —
+    hide the section until it exists.
+
 ## Known gaps, not blocking
 
 - ~~**Web is stale.**~~ — redeployed 24 Sep 2026: `podcasterium.com` serves 1.0.0+4 with the core fixes; `/`, `assetlinks.json` and the AASA return 200.
