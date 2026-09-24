@@ -105,16 +105,33 @@ Items marked **assistant** can be done in a session.
 
 ## After 1.0.0 is approved (1.0.1)
 
-12. **assistant — merge `feat/featured-channels` into `feat/podcast-core`**
-    and set `featuredChannels: ['subclub', 'launched', 'catholic_futurist']`
-    in `lib/brand.dart`.
-13. ~~**assistant — Play build 4**~~ — superseded: build 5 (real launcher icon and the Android shell fixes) replaced build 3 in the first review.
-14. **assistant — check for English articles.** Featured English shows still
-    have Croatian articles and chapter titles; the route `/v/:id/en` exists.
-    Find which episodes already have English articles; producing them for
-    English-language episodes is backend work in `domovina-api`.
+**Build 6 (1.0.1)** — built 24 Sep 2026 from core `2aa6f07`: Play internal
+track (production still 1.0.0 (5) in review), TestFlight, podcasterium.com.
+Promote to production only after 1.0.0 is approved on that store.
 
-15. **assistant — password sign-in for the review account.** A
+12. ~~**assistant — merge `feat/featured-channels` into `feat/podcast-core`**
+    and set `featuredChannels: ['subclub', 'launched', 'catholic_futurist']`
+    in `lib/brand.dart`.~~ — done 24 Sep 2026 (core `be6409f`), in build 6.
+13. ~~**assistant — Play build 4**~~ — superseded: build 5 (real launcher icon and the Android shell fixes) replaced build 3 in the first review.
+14. ~~**assistant — check for English articles.**~~ — checked 24 Sep 2026
+    from the channel JSON on the CDN (`pipeline.has_article_en`):
+    `subclub` 0 of 181, `launched` 0 of 116, `catholic_futurist` 14 of 20,
+    `domovina_tv` 1 of 7 (`fO7iltytw0I`). Sub Club and Launched articles are
+    Croatian retellings of English shows. **Still open (backend,
+    `domovina-api`):** generate `article.en.json` for the English-language
+    channels, starting with `subclub` — it is RevenueCat's own show and the
+    judges will open it first.
+
+15. **Password sign-in for the review account** — code done 24 Sep 2026
+    (core `2aa6f07`, in build 6): email step → "Sign in with password".
+    The existing review user `aee8c846-…` got a Supabase password (not the
+    Google one), so it keeps its promotional Plus; the password is in
+    `~/.config/podcasterium/review-account.env` on the owner's Mac, and a
+    live password grant returned that user. **owner, once 1.0.1 is live on
+    both stores:** change Play's Sign in details and Apple's demo account to
+    "Sign in → Continue with email → Sign in with password", then the Google
+    account may get its passkey and 2-step verification back.
+    Original item: **assistant — password sign-in for the review account.** A
     low-key "Sign in with password" path in the auth sheet (Supabase
     `signInWithPassword`) for one account such as `review@podcasterium.com`,
     with promotional Plus. Then Play's Sign in details and Apple's demo
@@ -126,19 +143,36 @@ Items marked **assistant** can be done in a session.
     1 Jan 2027 (RevenueCat → customer
     `aee8c846-3073-4a09-bf83-022764d8c6cb` → grant entitlement).
 
-17. **assistant — ship the Plus cold-start fix in 1.0.1.** Core commit
+17. **Plus cold-start fix** — in build 6 (1.0.1). Original item:
+    **assistant — ship the Plus cold-start fix in 1.0.1.** Core commit
     `31f5f51` on `feat/podcast-core`: `EntitlementService.init()` now seeds
     from `RevenueCatService.optimisticPlus`. The builds in review (iOS 4,
     Android 5) show "Get Podcasterium Plus" to a Plus user after a cold start
     with a restored session; a fresh sign-in (the reviewer's path) shows Plus
     correctly. Verified fixed in the simulator on 24 Sep 2026.
-18. **assistant — passkey hint names DOMOVINA.** The account screen's
+18. ~~Passkey hint~~ — done 24 Sep 2026 (core `3020f66`, in build 6):
+    `FeatureFlags.passkeys` (off for Podcasterium) hides the passkey tile
+    and the account section; the hint names the brand's domain. Original
+    item: **assistant — passkey hint names DOMOVINA.** The account screen's
     passkey help text says "turn it off for domovina.ai"
     (`authPasskeyHintBody`); make it brand-driven. Passkeys have no Corbado
     project for Podcasterium yet (`docs/03` §8), so "Add a passkey" may fail —
     hide the section until it exists.
 
 ## Known gaps, not blocking
+
+- **Person pages and semantic search fail on the web.** `mcp.domovina.ai`
+  (`domovina-rag`, `services/mcp/src/config.ts`) reflects CORS only for
+  origins in `PUBLIC_SEARCH_ALLOWED_ORIGINS`, whose default lists the
+  domovina.ai origins. `podcasterium.com` gets a 200 without
+  `Access-Control-Allow-Origin`, the browser drops it, and `/p/<slug>` shows
+  "Person not found" (measured 24 Sep 2026 with `curl -H "Origin: …"`). The
+  iOS and Android apps are not affected (no CORS). Fix: add
+  `https://podcasterium.com` and `https://www.podcasterium.com` to the
+  allow-list and redeploy `domovina-rag`.
+- **Cache purge fails.** `CLOUDFLARE_PURGE_TOKEN` in `.env` is still the
+  DOMOVINA zone token (`"success":false` on 24 Sep 2026); create a token
+  scoped to the podcasterium.com zone.
 
 - ~~**Web is stale.**~~ — redeployed 24 Sep 2026: `podcasterium.com` serves 1.0.0+4 with the core fixes; `/`, `assetlinks.json` and the AASA return 200.
 - **No purchase on the web.** The RevenueCat SDK runs only in the iOS and
