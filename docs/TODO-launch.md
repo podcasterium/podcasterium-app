@@ -20,15 +20,46 @@ Items marked **assistant** can be done in a session.
 
 ## Blocking the launch — in this order
 
-1. **owner — RevenueCat store credentials.** In the RevenueCat dashboard,
-   project Podcasterium:
-   - iOS app: In-App Purchase Key (`.p8` + Key ID + Issuer ID) and the App
-     Store Connect API key.
-   - Android app: the Play service account JSON; that service account needs
-     access to `com.podcasterium` in Play Console → Users and permissions
-     (financial data, orders).
-   Without them no purchase is verified, and a reviewer who tests Plus sees
-   an error.
+1. **owner — RevenueCat store credentials.** Dashboard:
+   `https://app.revenuecat.com/projects/9b6e08d9/apps`. Three uploads; the
+   key files never go into this repository.
+
+   **a) iOS app `Podcasterium (iOS)` (`app634a98acce`) → In-App Purchase Key**
+   - File: `~/.appstoreconnect/private_keys/SubscriptionKey_9H7HMZ4M53.p8`
+     (team-wide In-App Purchase key of ITalk d.o.o., the same one DOMOVINA
+     uses).
+   - Key ID: `9H7HMZ4M53`
+   - Issuer ID: `69a6de85-f7cc-47e3-e053-5b8c7c11a4d1`
+   - If RevenueCat rejects it, create a new one in App Store Connect →
+     Users and Access → Integrations → In-App Purchase, and download it once.
+
+   **b) iOS app → App Store Connect API key** (lets RevenueCat import
+   products and read prices)
+   - File: `~/.appstoreconnect/private_keys/AuthKey_25KYCN22QD.p8`
+   - Key ID: `25KYCN22QD`
+   - Issuer ID: `69a6de85-f7cc-47e3-e053-5b8c7c11a4d1`
+   - Vendor number is already set (`87530352`).
+
+   **c) Android app `Podcasterium (Android)` (`app5625a06b17`) → Service
+   Account Credentials JSON**
+   - File: `~/.config/play-publisher/domovina-play-publisher.json`
+     (service account `play-publisher@domovina-production.iam.gserviceaccount.com`).
+   - Grant it access to the new app first: Play Console → Users and
+     permissions → that service account → App permissions → add
+     *Podcasterium* with **View app information**, **View financial data**,
+     **Manage orders and subscriptions**. Without this RevenueCat's check
+     fails even with the right JSON.
+   - Google can take up to 36 hours before the credentials validate; a
+     "credentials are not valid yet" warning right after upload is normal.
+
+   **d) optional, recommended — Google real-time developer notifications**
+   (renewals and cancellations reach RevenueCat immediately): RevenueCat
+   Android app → *Google developer notifications* → copy the Pub/Sub topic
+   → Play Console → Monetize with Play → Monetization setup → paste the
+   topic → Send test notification.
+
+   Without a) and c) no purchase is verified, and a reviewer who tests Plus
+   sees an error.
 2. **assistant — verify the credentials** with the RevenueCat MCP
    (`validate-app-credentials`) once they are uploaded.
 3. **owner — review account.** Create a dedicated Google account for store
