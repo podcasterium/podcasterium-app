@@ -69,7 +69,14 @@ Items marked **assistant** can be done in a session.
    (`grant-customer-entitlement`, entitlement `podcasterium_plus`, lifetime
    or until 31 Dec 2026). Google does not buy subscriptions or use trials
    during review.
-5. **owner — Play sign-in details.** Play Console → App content → Sign in
+5. **owner — Play sign-in details.** First make the review account
+   usable by a stranger on a new device: remove the passkey and 2-step
+   verification from `podcasteriumsync@gmail.com`, set a long unique
+   password, and keep a recovery e-mail you control. Google's reviewers sign
+   in with the credentials you give them; a passkey or a second factor on
+   your device stops them, and the review fails. The account exists only for
+   review, so the exposure is limited to this app's promotional Plus.
+   Then: Play Console → App content → Sign in
    details → **Yes**; enter the review account's e-mail and password, with the
    instruction: *"Tap Sign in, choose Sign in with Google and use the account
    above. The account already has Podcasterium Plus."* Save, then Publishing
@@ -110,10 +117,7 @@ Items marked **assistant** can be done in a session.
 
 ## Known gaps, not blocking
 
-- **Web is stale.** `podcasterium.com` serves version 0.1.0+1 from commit
-  `7b1388b` (23 Sep 2026), without today's core fixes (Croatian default UI,
-  DOMOVINA footer text, paywall). Redeploy per `docs/04-build-and-deploy.md`
-  §2 — needs the owner's go-ahead, it is a production deploy.
+- ~~**Web is stale.**~~ — redeployed 24 Sep 2026: `podcasterium.com` serves 1.0.0+4 with the core fixes; `/`, `assetlinks.json` and the AASA return 200.
 - **No purchase on the web.** The RevenueCat SDK runs only in the iOS and
   Android apps; the web paywall falls back to indicative tiles because
   `RC_WEB_CHECKOUT_URL` (RevenueCat Web Billing) is not configured.
