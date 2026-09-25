@@ -159,6 +159,15 @@ Promote to production only after 1.0.0 is approved on that store.
     project for Podcasterium yet (`docs/03` §8), so "Add a passkey" may fail —
     hide the section until it exists.
 
+19. **assistant — upload the regenerated screenshots with 1.0.1.** Frames in
+    `store-assets/marketing/out/{iphone,ipad,android}/` (26 Sep 2026, from
+    `scripts/store-screenshots.sh`). Apple locks screenshots while a version is
+    in review, so they go into the new 1.0.1 version before it is submitted
+    (ASC API `appScreenshotSets`); Play takes them through `edits.images` once
+    1.0.0 is live, since a listing edit now would join the running review.
+    Android `02-player` is still the 24 Sep frame (emulator captures video as
+    black, `docs/05-store-launch.md` §6).
+
 ## Known gaps, not blocking
 
 - ~~**Person pages and semantic search fail on the web.**~~ — fixed
