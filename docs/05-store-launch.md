@@ -151,26 +151,76 @@ around the DOMOVINA TV channel (`/c/domovina-tv`), whose host is the owner,
 so no third party appears on a person page without consent: player and
 English article of `fO7iltytw0I`, the person page `/p/matija-stepanic`, a
 keyword search for "liberland" with the DOMOVINA TV episode on top. Android
-has no new set yet (no device and no emulator image on the build Mac).
+has its own captures in `store-assets/android/` since 25 Sep 2026.
 
-How it was driven, on iPhone 17 Pro Max (1320×2868) and iPad Pro 13" M5
-(2064×2752) simulators with a debug build (`flutter run
---dart-define-from-file=…`):
+**Procedure — `scripts/store-screenshots.sh`.** One command captures all
+three devices and renders the frames; every screen is reached by URL, so no
+step taps or types, and a rerun produces the same set:
 
-- `xcrun simctl status_bar <udid> override --time 9:41 …` for a clean bar.
-- Navigation by universal link: `xcrun simctl openurl <udid>
-  https://podcasterium.com/<route>` opens the app on that route directly
-  (the `com.podcasterium://` scheme needs an extra "Open" tap).
-- Taps: a small Swift CGEvent click helper plus the Simulator window frame
-  from System Events. Turn off Window → Show Device Bezels first; the screen
-  then fills the window width below the toolbar, which makes the mapping
-  exact. Run one simulator at a time, overlapping windows swallow clicks.
-- Text: `keystroke` goes through autocorrect ("liberland" became
-  "libel and"). Put the text on the simulator's pasteboard with
-  `xcrun simctl pbcopy <udid>` and press ⌘V in the field instead.
-- The home hero is pinned with `--dart-define=HERO_PIN=oxq1U0xypu8`
-  (core `2109bdb`): that episode leads the carousel and the carousel stops
-  rotating. Empty in every real build.
+```bash
+./scripts/store-screenshots.sh                 # iphone, ipad, android + render
+./scripts/store-screenshots.sh android         # any of: iphone ipad android
+SKIP_BUILD=1 SKIP_RENDER=1 ./scripts/store-screenshots.sh iphone
+```
+
+| File | Route | What makes it deterministic |
+| :-- | :-- | :-- |
+| 01-home | `/` | `HERO_PIN=oxq1U0xypu8` leads the carousel and stops it rotating; captured last, so "Continue listening" holds the episode played before |
+| 02-player | `/v/fO7iltytw0I/en?t=44&video=1` | `video=1` opens the video panel on every width, the iPad too (core, 26 Sep 2026); `t=44` selects the first chapter |
+| 03-article | `/v/fO7iltytw0I/en?t=44&video=0` | `video=0` keeps the panel closed; `t=44` scrolls the article to the first chapter |
+| 04-search | `/search?q=liberland` | `q` fills the field and runs the search without focus, so no keyboard |
+| 05-person | `/p/matija-stepanic` | |
+| 06-channel | `/c/domovina-tv` | |
+
+The routes, the pinned episode and the per-screen waits live at the top of
+the script. What it does per device:
+
+- **iOS** (iPhone 17 Pro Max 1320×2868, iPad Pro 13-inch (M5) 2064×2752):
+  debug simulator build with the `.env` keys plus `HERO_PIN`, reinstall
+  (signed out, empty history), `simctl status_bar override` to 9:41, then
+  `simctl openurl https://podcasterium.com/<route>` — a universal link, the
+  live AASA covers every route — and `simctl io screenshot`.
+- **Android** (AVD `podcasterium_shots`, Pixel 7 profile 1080×2400, API 35,
+  booted headless when not running): debug APK, reinstall, SystemUI demo mode
+  (9:41, full battery and signal, no notifications), then
+  `am start -d com.podcasterium://podcasterium.com/<route> -p com.podcasterium`.
+  The custom scheme, because the https App Links allow-list has no `/search`
+  and a debug build is not verified for the domain.
+- `HERO_PIN` is set only here. Every real build leaves it empty, and core
+  `HomeFeed.pickFeaturedCarousel` then ignores it (covered by
+  `featured_channels_test.dart`).
+
+It doubles as a regression test: a route that stops resolving or a screen
+that changes shows up as a diff in `store-assets/`. Its first run on
+26 Sep 2026 caught two core bugs: `?video=0` reused the open player page
+(same page key), and the search field had `autofocus: true`, so the keyboard
+covered the results.
+
+**Known gap — Android player video is black.** In the emulator, media_kit's
+video surface stays black in every capture (`screencap` and the emulator
+console, with the host and with the software GPU). `store-assets/android/02-player.jpg` therefore
+shows a black video, and the committed
+`marketing/out/android/02-player.jpg` is still the 24 Sep 2026 frame built
+from the iPhone capture. A physical Android phone over `adb` would close the
+gap; the script works with any `adb` device.
+
+One-time setup of the AVD (the system image is ~1.5 GB; on the build Mac
+`sdk/system-images` links to `/Volumes/DOMOVINA1TB/android/system-images` and
+the AVD lives in `/Volumes/DOMOVINA1TB/android/avd`, because the internal
+disk is nearly full). Nothing in an AVD is worth keeping: when it breaks or
+has to move, delete it and recreate it with these commands rather than
+copying it (a sparsebundle on the external disk copied at ~6 MB/s):
+
+```bash
+sdkmanager "system-images;android-35;google_apis;arm64-v8a"
+avdmanager create avd -n podcasterium_shots -d pixel_7 \
+  -k "system-images;android-35;google_apis;arm64-v8a" \
+  -p /Volumes/DOMOVINA1TB/android/avd/podcasterium_shots.avd
+# then in the AVD's config.ini: disk.dataPartition.size=6G, hw.ramSize=4096
+```
+
+The script boots it headless with `-gpu host`. A cold boot takes ~16 s from
+`DOMOVINA1TB`; from the old `DOMOVINA_BUILD` sparsebundle it took 17 min.
 
 **Captioned store frames** — `store-assets/marketing/`: an HTML/CSS page
 (`page.html`) with captions in `frames.js`, rendered by headless Chromium
@@ -179,7 +229,6 @@ How it was driven, on iPhone 17 Pro Max (1320×2868) and iPad Pro 13" M5
 uploaded. iPhone and iPad render as one wide panorama cut into frames, so
 the amber ribbon joins across neighbouring screenshots on the App Store;
 Android renders frame by frame, because Play shows screenshots with gaps.
-Android reuses the iPhone captures with the iOS status bar cropped.
 
 ```bash
 cd store-assets/marketing && npm install && npm run render

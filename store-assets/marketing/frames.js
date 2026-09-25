@@ -41,8 +41,9 @@ export const FRAMES = [
   },
 ];
 
-// Output sizes. `source` is the folder of raw captures; `cropTop` removes the
-// iOS status bar when the capture is reused for Android.
+// Output sizes. `source` is the folder of raw captures from
+// scripts/store-screenshots.sh; `cropTop` trims pixels off the top of a
+// capture (kept for reusing a capture from another device).
 export const DEVICES = {
   iphone: {
     width: 1320, height: 2868, source: 'ios-iphone', panorama: true,
@@ -53,7 +54,7 @@ export const DEVICES = {
     deviceWidth: 0.78, top: 0.215, radius: 0.045, bezel: 0.014, cropTop: 0,
   },
   android: {
-    width: 1080, height: 1920, source: 'ios-iphone', panorama: false,
-    deviceWidth: 0.7, top: 0.235, radius: 0.1, bezel: 0.022, cropTop: 186,
+    width: 1080, height: 1920, source: 'android', panorama: false,
+    deviceWidth: 0.7, top: 0.235, radius: 0.1, bezel: 0.022, cropTop: 0,
   },
 };
