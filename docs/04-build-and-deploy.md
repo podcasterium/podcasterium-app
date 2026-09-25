@@ -311,3 +311,35 @@ BRAND=podcasterium ./scripts/store-status.rb           # sees the new bundle on 
 bundletool dump manifest --bundle build/app/outputs/bundle/release/app-release.aab | grep package
 unzip -p build/ios/ipa/*.ipa 'Payload/*.app/Info.plist' | plutil -p - | grep -i bundleid
 ```
+
+---
+
+## 9. How build 6 (1.0.1) was actually shipped — 24 Sep 2026
+
+The scripted chain in §8 does not exist in this repo yet; build 6 went out by
+hand, in this order, and each step is repeatable:
+
+1. **Defines.** A JSON with the five build-time keys from `.env`
+   (`SUPABASE_URL`, `SUPABASE_ANON_KEY`, `MEILI_URL`,
+   `RC_PUBLIC_SDK_KEY_IOS`, `RC_PUBLIC_SDK_KEY_ANDROID`), kept outside the
+   repo and passed as `--dart-define-from-file=<file>` to every build.
+2. **Android.** `flutter build appbundle --release …` (87 MB AAB, 55 s of
+   Gradle). Before upload, check the merged manifest
+   (`build/app/intermediates/merged_manifest/release/…/AndroidManifest.xml`)
+   for the `com.podcasterium` scheme, `AudioService`, `BILLING`,
+   `LEANBACK_LAUNCHER`, and that `keytool -printcert -jarfile` matches the
+   SHA-256 in `/.well-known/assetlinks.json`. Upload with a copy of the
+   upstream `play-upload.sh` where `PKG=com.podcasterium`; the internal-track
+   commit went through while 1.0.0 (5) was still in production review, and
+   production stayed untouched.
+3. **iOS.** The §3 chain after `rm -rf build/ios .dart_tool/flutter_build
+   ios/Flutter/ephemeral` (a simulator run in between leaves the x86_64
+   slice), then `xcrun altool --upload-app` with key `25KYCN22QD`.
+4. **Web.** `flutter build web --release --wasm …`, copy `_worker.js`,
+   `_headers`, `robots.txt` from the core checkout's `web/`, `wrangler pages
+   deploy build/web --project-name=podcasterium --branch=main`. Check
+   `https://podcasterium.com/version.json`. The zone purge fails until
+   `.env` has a podcasterium.com purge token.
+
+Do not run two Flutter builds of this project at the same time; they share
+`build/` and `.dart_tool/`.
