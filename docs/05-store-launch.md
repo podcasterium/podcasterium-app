@@ -168,8 +168,9 @@ How it was driven, on iPhone 17 Pro Max (1320×2868) and iPad Pro 13" M5
 - Text: `keystroke` goes through autocorrect ("liberland" became
   "libel and"). Put the text on the simulator's pasteboard with
   `xcrun simctl pbcopy <udid>` and press ⌘V in the field instead.
-- The home carousel rotates; capture several frames and keep one whose
-  slide has an image (recent Sub Club and Launched episodes have none).
+- The home hero is pinned with `--dart-define=HERO_PIN=oxq1U0xypu8`
+  (core `2109bdb`): that episode leads the carousel and the carousel stops
+  rotating. Empty in every real build.
 
 **Captioned store frames** — `store-assets/marketing/`: an HTML/CSS page
 (`page.html`) with captions in `frames.js`, rendered by headless Chromium
