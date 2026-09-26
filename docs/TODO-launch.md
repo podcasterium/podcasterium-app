@@ -159,6 +159,26 @@ Promote to production only after 1.0.0 is approved on that store.
     project for Podcasterium yet (`docs/03` §8), so "Add a passkey" may fail —
     hide the section until it exists.
 
+**Build 7 (1.0.2)** — built 26 Sep 2026 from core `f4093c8`, the first
+merge of upstream `main` (DOMOVINA.ai `v2.0.158`) into the core, see
+`docs/04-build-and-deploy.md` §10. Play internal (versionCode 7), TestFlight
+(processing `VALID`), podcasterium.com (`version.json` 1.0.2+7). Production
+untouched: Play 1.0.0 (5), iOS 1.0.0 (4) still waiting for review. New for
+Podcasterium users:
+
+- **Sponsors in the recording** ("With support from" section, a marker in the
+  article, "Listen" in the player panel). Verified with Playwright on the local
+  build and on podcasterium.com at 1400 px and 390 px on `aue1GuuMsbA`: seek to
+  5963 s, "message ended" at 6008 s, playback continues, no console errors. A
+  Sub Club episode with `sponsors: []` shows no section. On 26 Sep none of the
+  37 latest episodes of `subclub`, `launched`, `catholic_futurist` and
+  `domovina_tv` has sponsors, so the section stays hidden in practice until
+  the pipeline finds some.
+- Magisterium badge fix (core `1eeee2a`), which build 6 did not have.
+
+Builds 6 and 7 are both on the test tracks; 1.0.1 was never submitted, so
+the next store submission should be 1.0.2 (7).
+
 19. **assistant — upload the regenerated screenshots with 1.0.1.** Frames in
     `store-assets/marketing/out/{iphone,ipad,android}/` (26 Sep 2026, from
     `scripts/store-screenshots.sh`). Apple locks screenshots while a version is
@@ -177,8 +197,8 @@ Promote to production only after 1.0.0 is approved on that store.
   `/p/<slug>` showed "Person not found". Native apps were never affected.
 - **Magisterium score badge leaked** onto the channel episode list (church
   icon with a score), because the shared corpus sends `magisterium_score`
-  in the channel and person JSON. Fixed in core `1eeee2a`, which is **not in
-  build 6**; it ships with the next build.
+  in the channel and person JSON. Fixed in core `1eeee2a`, shipped in
+  build 7 (1.0.2).
 - **Missing thumbnails.** Recent non-YouTube episodes of `subclub` (3 of the
   latest 15) and `launched` (8 of 15) have no
   `cdn.domovina.ai/images/<id>/thumbnail.png` (404), so the home carousel

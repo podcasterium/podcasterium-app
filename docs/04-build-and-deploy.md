@@ -343,3 +343,43 @@ hand, in this order, and each step is repeatable:
 
 Do not run two Flutter builds of this project at the same time; they share
 `build/` and `.dart_tool/`.
+
+---
+
+## 10. Pulling a newer upstream into the core — first done 26 Sep 2026
+
+The shell has no application code, so "upgrading Podcasterium to the latest
+DOMOVINA.ai" means merging upstream `main` into `feat/podcast-core` (the
+worktree `~/git/domovinatv/.podcast-core`) and rebuilding the shell over it.
+The first run took upstream `v2.0.158` (16 commits, 14 files under `lib/`)
+into core `f4093c8`.
+
+1. **Trial merge first**, in a throwaway worktree, to count conflicts:
+   `git -c merge.renameLimit=5000 merge --no-commit --no-ff origin/main`.
+   Git follows the `lib/` → `packages/podcast_core/lib/` move by itself for
+   edited files; files **added** upstream arrive as "file location"
+   conflicts and only need `git add` at the suggested package path.
+2. **Resolve by kind:**
+   - root `lib/main.dart`: keep ours (the thin `runPodcastApp` shell);
+   - root `pubspec.yaml`: keep ours (it holds the `workspace:` stanza) and
+     take only upstream's `version:`. Taking theirs wholesale breaks
+     `pub get` with "no workspace root";
+   - bump `appVersion` in `packages/podcast_core/lib/src/log.dart` to match;
+   - new upstream tests import `package:domovina_ai/…`: rewrite to
+     `package:podcast_core/…` and add `setUp(() => AppBrand.init(domovinaBrand))`;
+   - a fix already cherry-picked into the core shows up as add/add: keep ours.
+3. **Check new code for brand leaks**: every new CDN URL must go through
+   `CdnConfig.base` (the brand's host), never a literal domain.
+4. **Gates:** `flutter analyze` and `flutter test` in the package and in both
+   shells. `test/widget_test.dart` in the package fails before and after the
+   merge (it makes a real network call and gets HTTP 400); it is not a
+   regression signal.
+5. **Behaviour in a real browser.** Claude-in-Chrome is not usable for this:
+   a background window does not paint frames (screenshots are blank and
+   scrolling does nothing). Upstream's Playwright scripts are, e.g.
+   `scripts/verify-sponsor-listen.py --base <url>` with the button regex
+   widened to the English label ("Listen · ").
+6. Ship build N+1 to the test tracks as in §9; production and anything in
+   review stay untouched.
+
+What build 7 carried and how it was verified is in `docs/TODO-launch.md`.
