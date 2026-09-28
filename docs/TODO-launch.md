@@ -15,6 +15,7 @@ Items marked **assistant** can be done in a session.
 | :-- | :-- |
 | App Store 1.0.0 | **in review** since 24 Sep 2026 with build 4 (real app icon), release type MANUAL. Subscriptions `podcasterium_plus_monthly` / `_yearly` are READY_TO_SUBMIT and sit in a draft submission |
 | Google Play 1.0.0 (5) | in review since 24 Sep 2026 (review restarted to replace build 3): Android shell wired for OAuth return, background audio, TV; review account has promotional Plus |
+| Review check 28 Sep 2026 | App Store 1.0.0 (build 4) still `WAITING_FOR_REVIEW` (ASC API), review not started. Play API shows production 1.0.0 (5) `completed`, but the public listing still returns 404, so the Play review is still running. The owner sent an **expedited review request** to Apple (developer.apple.com/contact/app-store/?topic=expedite, team ITalk d.o.o., app ID 6815415892, reason: Shipaton deadline). Google Play has no expedite form; the only options are Play Console Help → Contact support, or waiting. Do not submit anything new to production on either store while 1.0.0 is in review: a new submission restarts the review |
 | RevenueCat | products, entitlement `podcasterium_plus`, offering `default`, store credentials for iOS and Android: all done and validated |
 | Core (`feat/podcast-core`) | 6 white-label fixes committed, unpushed; `featuredChannels` on branch `feat/featured-channels` (worktree `~/git/domovinatv/.podcast-core-featured`), not merged |
 
