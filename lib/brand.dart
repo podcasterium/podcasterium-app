@@ -30,14 +30,18 @@ const BrandConfig podcasteriumBrand = BrandConfig(
   defaultEpisodeLanguage: 'hr',
   endpoints: Endpoints(
     site: 'https://podcasterium.com',
-    // Phase 1 shares the DOMOVINA backend and corpus (docs/06 §1, §4).
-    cdn: 'https://cdn.domovina.ai',
-    rag: 'https://mcp.domovina.ai',
-    meili: 'https://search.domovina.ai',
-    cutter: 'https://cutter.domovina.ai',
+    // Phase 1 shares the DOMOVINA backend and corpus (docs/06 §1, §4), but
+    // only under podcasterium.com names: cdn is a second custom domain on
+    // the same R2 bucket, the others go through infra/edge-proxy.
+    cdn: 'https://cdn.podcasterium.com',
+    rag: 'https://mcp.podcasterium.com',
+    meili: 'https://search.podcasterium.com',
+    cutter: 'https://cutter.podcasterium.com',
   ),
   // Everything domain-specific is off in phase 1 (docs/06 §3).
-  flags: FeatureFlags(),
+  // The Plus button in the home header is how App Review finds the
+  // in-app purchases (rejection of 1.0.0 on 30 Sep 2026, Guideline 2.1(b)).
+  flags: FeatureFlags(plusInHeader: true),
   sourceCodeUrl: 'https://github.com/podcasterium/podcasterium-app',
   // Plus is sold as monthly and yearly only (docs/DECISIONS.md, 24 Sep 2026).
   plusLifetime: false,
