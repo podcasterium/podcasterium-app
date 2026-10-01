@@ -1,6 +1,6 @@
 # TODO — 1.0.0 launch and Shipaton 2026
 
-Open work as of **24 Sep 2026, evening**; state table updated 1 Oct 2026. Shipaton deadline: **30 Sep 2026,
+Open work as of **24 Sep 2026, evening**; state table updated 1 Oct 2026. The 1 Oct rejection, fixes and API resubmission: [`2026-10-01-app-review-rejection-and-resubmission.md`](2026-10-01-app-review-rejection-and-resubmission.md). Shipaton deadline: **30 Sep 2026,
 23:45 PDT** (1 Oct 2026, 08:45 CEST). The app must be *published* on at least
 one store by then, with purchases running through RevenueCat. Submission copy
 and the video script: `docs/shipaton/`.
