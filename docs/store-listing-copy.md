@@ -2,9 +2,9 @@
 
 Canonical listing text for both stores. The consoles are copies of this file:
 when one changes, the other changes the same day (rule inherited from
-upstream `docs/payments/store-listing-copy.md`).
+the engine's own listing copy).
 
-Written for **version 1.0 (phase 1)**: the DOMOVINA corpus under a new brand,
+Written for **version 1.0 (phase 1)**: the shared phase-1 corpus,
 English interface, with Plus as an optional subscription (decided 24 Sep 2026,
 `DECISIONS.md`). `06-backend-and-corpus.md` §6 limits what phase 1 may
 promise, and `05-store-launch.md` §5 lists the words that must not appear. In
@@ -20,7 +20,7 @@ language", and it names only the two Plus benefits that exist.
 | :-- | :-- |
 | App name | `Podcasterium` |
 | Primary language | en-US |
-| Price | Free; Plus subscription monthly or yearly, 7-day free trial (App Store USD 3.99 / 34.99, EUR 4.99 / 39.99; Play converted from USD with DOMOVINA's euro prices) |
+| Price | Free; Plus subscription monthly or yearly, 7-day free trial (App Store USD 3.99 / 34.99, EUR 4.99 / 39.99; Play converted from USD with the same euro prices) |
 | Age rating | Apple 12+ (third-party podcasts may touch mature topics); Play target audience 13+ |
 | Apple category | Primary: Entertainment · Secondary: Education |
 | Play category | Entertainment |
@@ -94,7 +94,7 @@ Apple Standard EULA: https://www.apple.com/legal/internet-services/itunes/dev/st
 ```
 The app works without signing in; every feature reviewed can be reached logged out. Sign-in (Apple, Google, email) only syncs favourites and playback progress.
 
-Media is streamed from the operator's own CDN (cdn.domovina.ai, shared with the operator's app DOMOVINA.ai). Where a YouTube video is shown, it uses the official youtube-nocookie embedded player; the app does not extract YouTube streams and does not strip ads. Its own value is the processing on top of each episode: chapters, a speaker-labelled transcript, an article per chapter, and keyword and semantic search across the archive.
+Media is streamed from the operator's own CDN (cdn.podcasterium.com). Where a YouTube video is shown, it uses the official youtube-nocookie embedded player; the app does not extract YouTube streams and does not strip ads. Its own value is the processing on top of each episode: chapters, a speaker-labelled transcript, an article per chapter, and keyword and semantic search across the archive.
 
 The current archive is mostly Croatian-language podcasts; the interface is English.
 
@@ -117,9 +117,9 @@ Watch, listen to and read podcasts: chapters, speakers, transcript, article.
 
 ## 4. Open before submission (not before TestFlight / internal)
 
-- The privacy and terms pages on `podcasterium.com` still render the upstream
-  DOMOVINA wording ("Croatian Catholic podcasts", Magisterium, Certilia,
-  contact at `ms@domovina.ai`). That text lives in `podcast_core` l10n and has
-  to become brand-neutral before an App Review reads it.
+- ~~The privacy and terms pages rendered the upstream wording and contact
+  address.~~ Done: brand-neutral intro and AI paragraphs, and the contact
+  address comes from `BrandConfig.contactEmail` (`hello@podcasterium.com`,
+  1 Oct 2026).
 - A support page (or a brand support address) for the Support URL and the
   Play contact e-mail.

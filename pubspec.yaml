@@ -13,8 +13,8 @@ dependencies:
     sdk: flutter
   # All application code. Pinned to a core tag; bumping this line is the only
   # way this shell picks up upstream changes (docs/08-white-label-architecture.md).
-  # The core is developed inside the upstream DOMOVINA.ai monorepo as
-  # packages/podcast_core and published from there under this tag.
+  # The core is developed in the engine's monorepo as packages/podcast_core
+  # and published from there under this tag.
   #
   # Local development against an upstream checkout: copy
   # pubspec_overrides.example.yaml to pubspec_overrides.yaml (git-ignored).

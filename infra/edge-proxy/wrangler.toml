@@ -1,5 +1,6 @@
 # Deploy: CLOUDFLARE_ACCOUNT_ID=7dc7167b7e2e00923bfa7cd697df14e4 npx wrangler deploy
-# (account D.O.M., which holds both the podcasterium.com and domovina.ai zones)
+# (the Cloudflare account that holds the podcasterium.com zone).
+# Secret: UPSTREAM_ZONE (npx wrangler secret put UPSTREAM_ZONE).
 name = "podcasterium-edge-proxy"
 main = "worker.js"
 compatibility_date = "2026-09-01"

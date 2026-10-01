@@ -13,7 +13,7 @@ struct BrandConfig {
 
     static let current = BrandConfig(
         appName: "Podcasterium",
-        cdnBase: URL(string: "https://cdn.domovina.ai")!,
+        cdnBase: URL(string: "https://cdn.podcasterium.com")!,
         accent: Color(red: 0.33, green: 0.27, blue: 0.86),
         domainScoreLabel: nil
     )

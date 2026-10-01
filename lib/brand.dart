@@ -1,8 +1,8 @@
 import 'package:flutter/painting.dart' show Color;
 import 'package:podcast_core/podcast_core.dart';
 
-/// The Podcasterium brand: everything that distinguishes this shell from
-/// DOMOVINA.ai and lives in Dart. Non-Dart brand material (icons, splash,
+/// The Podcasterium brand: everything that makes this app Podcasterium and
+/// lives in Dart. Non-Dart brand material (icons, splash,
 /// manifest, index.html meta) is generated from the brand manifest.
 ///
 /// Open decisions (docs/DECISIONS.md, D4/D6/D7) are marked TODO; the values
@@ -26,13 +26,13 @@ const BrandConfig podcasteriumBrand = BrandConfig(
   logoAsset: 'assets/brand/logo_1024.png',
   splashAsset: 'assets/brand/splash.png',
   defaultLocale: 'en',
-  // Phase 1 shares the DOMOVINA corpus, whose articles are Croatian.
+  // The phase-1 corpus is mostly Croatian-language shows, so articles are
+  // Croatian.
   defaultEpisodeLanguage: 'hr',
   endpoints: Endpoints(
     site: 'https://podcasterium.com',
-    // Phase 1 shares the DOMOVINA backend and corpus (docs/06 §1, §4), but
-    // only under podcasterium.com names: cdn is a second custom domain on
-    // the same R2 bucket, the others go through infra/edge-proxy.
+    // Every backend host has a podcasterium.com name: cdn is a custom
+    // domain on the R2 bucket, the others go through infra/edge-proxy.
     cdn: 'https://cdn.podcasterium.com',
     rag: 'https://mcp.podcasterium.com',
     meili: 'https://search.podcasterium.com',
@@ -43,6 +43,8 @@ const BrandConfig podcasteriumBrand = BrandConfig(
   // in-app purchases (rejection of 1.0.0 on 30 Sep 2026, Guideline 2.1(b)).
   flags: FeatureFlags(plusInHeader: true),
   sourceCodeUrl: 'https://github.com/podcasterium/podcasterium-app',
+  // Cloudflare Email Routing forwards it to the owner (set up 1 Oct 2026).
+  contactEmail: 'hello@podcasterium.com',
   // Plus is sold as monthly and yearly only (docs/DECISIONS.md, 24 Sep 2026).
   plusLifetime: false,
   // English-language shows in the shared corpus, surfaced first on the
