@@ -18,6 +18,7 @@ Items marked **assistant** can be done in a session.
 | Review check 28 Sep 2026 | App Store 1.0.0 (build 4) still `WAITING_FOR_REVIEW` (ASC API), review not started. Play API shows production 1.0.0 (5) `completed`, but the public listing still returns 404, so the Play review is still running. The owner sent an **expedited review request** to Apple (developer.apple.com/contact/app-store/?topic=expedite, team ITalk d.o.o., app ID 6815415892, reason: Shipaton deadline). Google Play has no expedite form; the only options are Play Console Help → Contact support, or waiting. Do not submit anything new to production on either store while 1.0.0 is in review: a new submission restarts the review |
 | App Store rejection 30 Sep 2026 | 1.0.0 (4) **rejected** (submission `3d19308b`, reviewed on iPad Air 11" M3 and iPhone 17 Pro Max). Three findings: **5.1.1(v)** no account deletion found; **2.1(b)** in-app purchases not found; **5.2.3** asks for documentary evidence of the rights to the third-party audio and video. The first two were discoverability: deletion and the paywall existed only inside the account screen, reachable after sign-in. Fixed in core `39961d9`, `bc73dc3`, `f33017f` (Plus button in the home header via `FeatureFlags.plusInHeader`; Plus and Delete account in the avatar menu). The ASC version was renamed 1.0.0 → 1.0.3, the review notes rewritten, and build 11 (core `8c71318`, which also maps the data's absolute CDN URLs onto `cdn.podcasterium.com`) attached; not resubmitted yet. Resubmission needs the owner's screen recording of the deletion flow on a physical device and a decision on 5.2.3. 5.2.3 is open: the app streams copies of third-party episodes from our own CDN, and no written permissions exist yet |
 | Backend names 1 Oct 2026 | The app addresses only podcasterium.com hosts: `cdn.podcasterium.com` (second custom domain on R2 bucket `cdn-domovina-ai`), `api`/`mcp`/`search`/`cutter.podcasterium.com` (Worker `infra/edge-proxy`, forwarding to the domovina.ai hosts). Verified: auth, REST, edge functions, realtime WebSocket (101), RAG CORS for podcasterium.com, Meilisearch, cutter. Pages env `CDN`, `PERSON_API`, `PERSONS_API` switched for the web worker |
+| Review account 1 Oct 2026 | The Supabase user of `podcasteriumsync@gmail.com` was deleted while recording the account-deletion video for Apple; the owner signed in again, the new user is `215f76d5-9390-464e-b84f-e1b7c9cdf76d` (Google only, no Supabase password any more) and has promotional `podcasterium_plus` until 1 Jan 2027 |
 | Shipaton | Deadline extended to **1 Oct 2026, 12:00 PDT**. The app must be public in the US; TestFlight and test tracks do not count. Play 1.0.0 (5) still in review (178 countries) |
 | RevenueCat | products, entitlement `podcasterium_plus`, offering `default`, store credentials for iOS and Android: all done and validated |
 | Core (`feat/podcast-core`) | 6 white-label fixes committed, unpushed; `featuredChannels` on branch `feat/featured-channels` (worktree `~/git/domovinatv/.podcast-core-featured`), not merged |
@@ -66,7 +67,7 @@ Items marked **assistant** can be done in a session.
    sees an error.
 2. ~~**assistant — verify the credentials**~~ — done 24 Sep 2026: with the RevenueCat MCP
    (`validate-app-credentials`) once they are uploaded.
-3. ~~**owner — review account.**~~ — done 24 Sep 2026: `podcasteriumsync@gmail.com`, Supabase user `aee8c846-3073-4a09-bf83-022764d8c6cb`. Create a dedicated Google account for store
+3. ~~**owner — review account.**~~ — done 24 Sep 2026: `podcasteriumsync@gmail.com`, Supabase user `215f76d5-9390-464e-b84f-e1b7c9cdf76d`. Create a dedicated Google account for store
    review (for example `podcasterium.review@gmail.com`), then sign in to the
    app once with "Sign in with Google" so the user exists.
 4. ~~**assistant — grant Plus to the review account**~~ — done 24 Sep 2026, promotional `podcasterium_plus` until 1 Jan 2027. The customer had to be created first with `GET /v1/subscribers/<uuid>` (public SDK key), because a web sign-in never reaches RevenueCat. with the RevenueCat MCP
@@ -145,7 +146,7 @@ Promote to production only after 1.0.0 is approved on that store.
     re-reviews every update and may re-check at any time.
 16. **owner — renew the review account's promotional Plus** before
     1 Jan 2027 (RevenueCat → customer
-    `aee8c846-3073-4a09-bf83-022764d8c6cb` → grant entitlement).
+    `215f76d5-9390-464e-b84f-e1b7c9cdf76d` → grant entitlement).
 
 17. **Plus cold-start fix** — in build 6 (1.0.1). Original item:
     **assistant — ship the Plus cold-start fix in 1.0.1.** Core commit
