@@ -1,0 +1,13 @@
+# Deploy: CLOUDFLARE_ACCOUNT_ID=7dc7167b7e2e00923bfa7cd697df14e4 npx wrangler deploy
+# (account D.O.M., which holds both the podcasterium.com and domovina.ai zones)
+name = "podcasterium-edge-proxy"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+workers_dev = false
+
+routes = [
+  { pattern = "api.podcasterium.com", custom_domain = true },
+  { pattern = "mcp.podcasterium.com", custom_domain = true },
+  { pattern = "search.podcasterium.com", custom_domain = true },
+  { pattern = "cutter.podcasterium.com", custom_domain = true },
+]
