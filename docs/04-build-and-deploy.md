@@ -348,6 +348,18 @@ Do not run two Flutter builds of this project at the same time; they share
 
 ## 10. Pulling a newer upstream into the core — first done 26 Sep 2026
 
+> **Superseded on 10 Oct 2026.** After the second manual merge (upstream
+> v2.0.178, core `b0539ef`, 131 files) upstream `main` was fast-forwarded to
+> `feat/podcast-core`, so a sync is now a fast-forward of the worktree; see
+> `docs/11-upstream-feature-sync.md`. What the second merge added to the
+> steps below: files added upstream land in `lib/` and must be moved into
+> the package with their `../main.dart` imports pointed at `src/log.dart`; a
+> file rewritten upstream (the episode screen) is easier as the upstream copy
+> with the core deltas re-applied; a file that diverged on both sides and
+> lost rename detection (`home_feed.dart`) needs `git merge-file` against the
+> merge-base version. Tests that mock HTTP must answer the new
+> `episode.json` fetch and reset `DataService` memory between tests.
+
 The shell has no application code, so "upgrading Podcasterium to the latest
 DOMOVINA.ai" means merging upstream `main` into `feat/podcast-core` (the
 worktree `~/git/domovinatv/.podcast-core`) and rebuilding the shell over it.
