@@ -6,7 +6,7 @@ Shipaton 2026 rules allow while judging runs.
 
 ## Status — 10 Oct 2026, evening
 
-Steps 1–3 of §4 are done:
+Steps 1, 2 and 5 of §4 are done, step 3 is half done:
 
 - Core `b0539ef` (merge of upstream v2.0.178) and `e2c7272` (sponsor OG
   tags follow the brand) are on `feat/podcast-core`, pushed. New flags
@@ -17,9 +17,36 @@ Steps 1–3 of §4 are done:
 - Web: preview only, `https://preview-1-0-4.podcasterium.pages.dev`;
   `podcasterium.com` still serves 1.0.3 (12). On the preview the persons API
   fails CORS (it allows only `https://podcasterium.com`), which is expected.
-- Not done yet: a real sign-in and purchase on the test builds (§4 step 3),
-  the production web deploy and the store releases (§4 step 4, after
-  13 Oct 21:00 CEST and the 1.0.3 approval).
+- **Open, deferred by the owner on 10 Oct 2026:** one real sign-in and one
+  purchase on 1.0.4 (13), on TestFlight and on Play internal (§4 step 3).
+  It needs a physical device and a sandbox account, so the assistant cannot
+  do it. It must be done before 1.0.4 goes to either store's production.
+- Waiting: the production web deploy and the store releases (§4 step 4,
+  after 13 Oct 21:00 CEST and the 1.0.3 approval). The owner checked the
+  preview and found it clearly faster than podcasterium.com.
+- **Step 5 done the same evening:** upstream `main` was fast-forwarded to
+  `feat/podcast-core` (`e2c7272`), so DOMOVINA.ai itself now builds from
+  `packages/podcast_core`. Checked first in the core worktree: DOMOVINA
+  shell test, `flutter build web --release --wasm` (2.0.178) and
+  `flutter build apk --debug`; `scripts/deploy.sh` and
+  `scripts/verify-doc-refs.sh` already used the package paths.
+
+### How a sync works from now on
+
+`feat/podcast-core` and upstream `main` are the same history. To take a new
+DOMOVINA.ai release into Podcasterium:
+
+```bash
+cd ~/git/domovinatv/.podcast-core     # worktree, branch feat/podcast-core
+git fetch origin && git merge --ff-only origin/main
+cd ~/git/podcasterium/podcasterium-app
+flutter pub get && flutter analyze    # pubspec_overrides.yaml points at the worktree
+```
+
+No more manual merges or moving files out of `lib/`. New upstream features
+still need a brand check (new `FeatureFlags`, hard-coded brand strings) before
+a Podcasterium release. Publishing the core under a git tag
+(`podcast_core` `core-v0.1.0` in `pubspec.yaml`) is still open.
 
 Known gap seen while checking, older than this sync: the episode loading
 screen lists its steps (summary, chapters, article, transcript) in Croatian
