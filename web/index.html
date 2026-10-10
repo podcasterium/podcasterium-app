@@ -31,8 +31,68 @@
 
   <title>Podcasterium</title>
   <link rel="manifest" href="manifest.json">
+
+  <!-- Boot splash colours follow the app's scaffold background (Material 3
+       surface for the brand seed #2B4C7E), dark by default and light when the
+       user picked it, so the hand-over from splash to app never flashes white.
+       The splash itself is in <body>; behaviour ported from upstream
+       docs/2026-10-09-boot-splash.md. -->
+  <script>
+    try {
+      if (localStorage.getItem('theme_mode') === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    } catch (_) {}
+  </script>
+  <style>
+    :root{--boot-bg:#111318;--boot-fg:#e2e2e9;--boot-mark:#fff;--boot-dim:rgba(226,226,233,.62);--boot-track:rgba(255,255,255,.12);}
+    :root[data-theme="light"]{--boot-bg:#f9f9ff;--boot-fg:#1a1b20;--boot-mark:#2B4C7E;--boot-dim:rgba(26,27,32,.62);--boot-track:rgba(43,76,126,.14);}
+    html{background:var(--boot-bg);}
+    flutter-view{background:var(--boot-bg);}
+  </style>
 </head>
 <body>
+  <!-- Static boot splash: also the only text crawlers and reviewers see before
+       Flutter renders. It is removed only once the first Flutter frame is
+       actually painted on the canvas, never on a fixed timeout. -->
+  <div id="boot-intro" role="main" aria-label="Podcasterium" aria-busy="true">
+    <style>
+      #boot-intro{position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;align-items:center;background:var(--boot-bg);color:var(--boot-fg);font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased;padding:0 24px;overflow:auto;transition:opacity .4s ease;}
+      #boot-intro .bi-main{flex:1 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 0 32px;}
+      #boot-intro img{width:72px;height:72px;border-radius:16px;margin-bottom:18px;}
+      #boot-intro h1{font-weight:800;font-size:clamp(32px,7vw,48px);margin:0;letter-spacing:.2px;color:var(--boot-mark);}
+      #boot-intro .bi-tag{font-size:clamp(15px,2.4vw,18px);margin:8px 0 0;font-weight:500;opacity:.9;}
+      #boot-intro .bi-progress{width:min(240px,60vw);height:3px;margin:32px auto 0;border-radius:3px;background:var(--boot-track);overflow:hidden;position:relative;}
+      #boot-intro .bi-progress i{position:absolute;top:0;bottom:0;left:0;width:35%;border-radius:3px;background:#D97706;animation:bi-slide 1.4s ease-in-out infinite;}
+      @keyframes bi-slide{0%{transform:translateX(-100%)}100%{transform:translateX(290%)}}
+      @media (prefers-reduced-motion:reduce){#boot-intro .bi-progress i{animation:none;width:100%;opacity:.5;}}
+      #boot-intro .bi-load{margin:12px 0 0;font-size:13px;color:var(--boot-dim);min-height:1.5em;}
+      #boot-intro .bi-note{margin:6px auto 0;max-width:340px;font-size:13px;line-height:1.5;color:var(--boot-dim);}
+      #boot-intro .bi-note[hidden]{display:block;visibility:hidden;}
+      #boot-intro button{margin-top:14px;font:600 14px system-ui,sans-serif;color:#fff;background:#2B4C7E;border:0;border-radius:8px;padding:10px 18px;cursor:pointer;}
+      #boot-intro button[hidden]{display:none;}
+      #boot-intro .bi-about{flex:0 0 auto;max-width:620px;padding:0 0 40px;text-align:center;color:var(--boot-dim);}
+      #boot-intro .bi-about p{font-size:13px;line-height:1.6;margin:0 0 10px;}
+      #boot-intro a{color:inherit;}
+      #boot-intro .bi-links a{margin:0 6px;white-space:nowrap;font-size:13px;}
+    </style>
+    <div class="bi-main">
+      <img src="icons/Icon-192.png" alt="">
+      <h1>Podcasterium</h1>
+      <p class="bi-tag">Watch, listen to and read podcasts.</p>
+      <div class="bi-progress" aria-hidden="true"><i></i></div>
+      <p class="bi-load" id="bi-load" aria-live="polite">Downloading the app…</p>
+      <p class="bi-note" id="bi-note" hidden>Slow connection. The app downloads only the first time; next time it opens quickly.</p>
+      <button type="button" id="bi-retry" hidden onclick="location.reload()">Try again</button>
+    </div>
+    <div class="bi-about">
+      <p>Podcasterium turns long podcast episodes into chapters, a transcript that marks who is speaking, and an article you can read instead of listening.</p>
+      <div class="bi-links">
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+      </div>
+    </div>
+  </div>
   <!--
     You can customize the "flutter_bootstrap.js" script.
     This is useful to provide a custom configuration to the Flutter loader
@@ -49,5 +109,88 @@
   <script src="passkeys_bundle.js"></script>
 
   <script src="flutter_bootstrap.js" async></script>
+
+  <script>
+    // The splash stays until Flutter has painted its first frame. The
+    // 'flutter-first-frame' event only means the frame is composed (skwasm
+    // rasterises it in a worker), so the canvas is sampled at 8x8 until it
+    // has opaque pixels; fallback 8 s after the event.
+    (function () {
+      var intro = document.getElementById('boot-intro');
+      if (!intro) return;
+      var load = document.getElementById('bi-load');
+      var note = document.getElementById('bi-note');
+      var retry = document.getElementById('bi-retry');
+      var done = false;
+      function hideIntro() {
+        if (done) return;
+        done = true;
+        intro.setAttribute('aria-busy', 'false');
+        intro.style.opacity = '0';
+        setTimeout(function () { if (intro.parentNode) intro.parentNode.removeChild(intro); }, 450);
+      }
+      function painted(c, cb) {
+        if (!window.createImageBitmap || !c || !c.width) return cb(false);
+        createImageBitmap(c, { resizeWidth: 8, resizeHeight: 8 }).then(function (bmp) {
+          var o = document.createElement('canvas');
+          o.width = o.height = 8;
+          var g = o.getContext('2d', { willReadFrequently: true });
+          g.drawImage(bmp, 0, 0);
+          var d = g.getImageData(0, 0, 8, 8).data, opaque = 0, j;
+          for (j = 3; j < d.length; j += 4) if (d[j] > 200) opaque++;
+          cb(opaque > 32);
+        }, function () { cb(false); });
+      }
+      function hideWhenPainted() {
+        var started = Date.now();
+        (function poll() {
+          if (done) return;
+          var gp = document.querySelector('flt-glass-pane');
+          var c = gp && gp.shadowRoot && gp.shadowRoot.querySelector('canvas');
+          painted(c, function (ok) {
+            if (ok || Date.now() - started > 8000) {
+              requestAnimationFrame(function () { requestAnimationFrame(hideIntro); });
+            } else {
+              setTimeout(poll, 100);
+            }
+          });
+        })();
+      }
+      window.addEventListener('flutter-first-frame', hideWhenPainted, { once: true });
+
+      // Real phases: downloading lasts until the app code arrives.
+      try {
+        new PerformanceObserver(function (list) {
+          list.getEntries().forEach(function (e) {
+            if (!done && /\/main\.dart\.(wasm|js)(\?|$)/.test(e.name)) {
+              load.textContent = 'Starting…';
+              note.hidden = true;
+              // Fallback if the event never fires: main() to runApp takes
+              // about 3 s, so 20 s never uncovers an empty page.
+              setTimeout(hideIntro, 20000);
+            }
+          });
+        }).observe({ type: 'resource', buffered: true });
+      } catch (_) {}
+
+      setTimeout(function () { if (!done && load.textContent !== 'Starting…') note.hidden = false; }, 8000);
+
+      // Code that failed to load: offer a retry instead of an endless spinner.
+      function failed() {
+        if (done) return;
+        load.textContent = 'Loading got stuck.';
+        note.hidden = true;
+        retry.hidden = false;
+      }
+      window.addEventListener('error', function (e) {
+        var t = e.target;
+        if (t && t.tagName === 'SCRIPT' && /flutter_bootstrap|passkeys_bundle|main\.dart|skwasm|canvaskit/.test(t.src || '')) failed();
+      }, true);
+      window.addEventListener('unhandledrejection', function (e) {
+        var r = String((e.reason && (e.reason.message || e.reason)) || '');
+        if (/failed to fetch|networkerror|load failed|wasm|compile|instantiate/i.test(r)) failed();
+      });
+    })();
+  </script>
 </body>
 </html>
