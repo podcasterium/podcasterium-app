@@ -4,6 +4,28 @@ State on 10 Oct 2026. What DOMOVINA.ai shipped since the core Podcasterium
 builds from, which of it Podcasterium takes, in what order, and what the
 Shipaton 2026 rules allow while judging runs.
 
+## Status — 10 Oct 2026, evening
+
+Steps 1–3 of §4 are done:
+
+- Core `b0539ef` (merge of upstream v2.0.178) and `e2c7272` (sponsor OG
+  tags follow the brand) are on `feat/podcast-core`, pushed. New flags
+  `homeSnapshot` and `youtubeWatch` are off for Podcasterium; sponsor
+  routes and live sponsored moments follow `flags.pinka`.
+- Shell 1.0.4+13 with the brand-neutral boot splash.
+- Play internal: 1.0.4 (13). TestFlight: 1.0.4 (13) uploaded.
+- Web: preview only, `https://preview-1-0-4.podcasterium.pages.dev`;
+  `podcasterium.com` still serves 1.0.3 (12). On the preview the persons API
+  fails CORS (it allows only `https://podcasterium.com`), which is expected.
+- Not done yet: a real sign-in and purchase on the test builds (§4 step 3),
+  the production web deploy and the store releases (§4 step 4, after
+  13 Oct 21:00 CEST and the 1.0.3 approval).
+
+Known gap seen while checking, older than this sync: the episode loading
+screen lists its steps (summary, chapters, article, transcript) in Croatian
+in the English interface; the labels are hard-coded in core
+`packages/podcast_core/lib/services/data_service.dart`.
+
 ## 0. Principle
 
 DOMOVINA.ai is always equal to or ahead of Podcasterium in features. It is
