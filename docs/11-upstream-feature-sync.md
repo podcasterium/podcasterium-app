@@ -4,7 +4,7 @@ State on 10 Oct 2026. What DOMOVINA.ai shipped since the core Podcasterium
 builds from, which of it Podcasterium takes, in what order, and what the
 Shipaton 2026 rules allow while judging runs.
 
-## Status — 10 Oct 2026, evening
+## Status — 10 Oct 2026, evening (web updated 13 Oct 2026)
 
 Steps 1, 2 and 5 of §4 are done, step 3 is half done:
 
@@ -14,15 +14,20 @@ Steps 1, 2 and 5 of §4 are done, step 3 is half done:
   routes and live sponsored moments follow `flags.pinka`.
 - Shell 1.0.4+13 with the brand-neutral boot splash.
 - Play internal: 1.0.4 (13). TestFlight: 1.0.4 (13) uploaded.
-- Web: preview only, `https://preview-1-0-4.podcasterium.pages.dev`;
-  `podcasterium.com` still serves 1.0.3 (12). On the preview the persons API
-  fails CORS (it allows only `https://podcasterium.com`), which is expected.
+- Web: **production since 13 Oct 2026, 12:10 CEST**, on the owner's
+  explicit decision, during the last hours of the Judging Period. The same
+  `build/web` artifact that served the preview
+  (`https://preview-1-0-4.podcasterium.pages.dev`) was deployed with
+  `--branch=main` (deployment `762154c4`). `podcasterium.com/version.json`
+  answers 1.0.4 (13); `/`, `assetlinks.json`, the AASA and `sitemap.xml`
+  return 200, and the home screen renders in a real browser.
 - **Open, deferred by the owner on 10 Oct 2026:** one real sign-in and one
   purchase on 1.0.4 (13), on TestFlight and on Play internal (§4 step 3).
   It needs a physical device and a sandbox account, so the assistant cannot
   do it. It must be done before 1.0.4 goes to either store's production.
-- Waiting: the production web deploy and the store releases (§4 step 4,
-  after 13 Oct 21:00 CEST and the 1.0.3 approval). The owner checked the
+- Waiting: the store releases (§4 step 4, after 13 Oct 21:00 CEST and the
+  1.0.3 approval; on 13 Oct the owner chose to leave both stores untouched
+  for now). The owner checked the
   preview and found it clearly faster than podcasterium.com.
 - **Step 5 done the same evening:** upstream `main` was fast-forwarded to
   `feat/podcast-core` (`e2c7272`), so DOMOVINA.ai itself now builds from
