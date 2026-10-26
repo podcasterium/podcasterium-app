@@ -1,6 +1,6 @@
 # TODO — 1.0.0 launch and Shipaton 2026
 
-Open work as of **24 Sep 2026, evening**; state table updated 1 Oct 2026. The 1 Oct rejection, fixes and API resubmission: [`2026-10-01-app-review-rejection-and-resubmission.md`](2026-10-01-app-review-rejection-and-resubmission.md). Shipaton deadline: **30 Sep 2026,
+Open work as of **24 Sep 2026, evening**; state table updated 26 Oct 2026. The 1 Oct rejection, fixes and API resubmission: [`2026-10-01-app-review-rejection-and-resubmission.md`](2026-10-01-app-review-rejection-and-resubmission.md). Shipaton deadline: **30 Sep 2026,
 23:45 PDT** (1 Oct 2026, 08:45 CEST). The app must be *published* on at least
 one store by then, with purchases running through RevenueCat. Submission copy
 and the video script: `docs/shipaton/`.
@@ -20,6 +20,8 @@ Items marked **assistant** can be done in a session.
 | Backend names 1 Oct 2026 | The app addresses only podcasterium.com hosts: `cdn.podcasterium.com` (second custom domain on R2 bucket `cdn-domovina-ai`), `api`/`mcp`/`search`/`cutter.podcasterium.com` (Worker `infra/edge-proxy`, forwarding to the domovina.ai hosts). Verified: auth, REST, edge functions, realtime WebSocket (101), RAG CORS for podcasterium.com, Meilisearch, cutter. Pages env `CDN`, `PERSON_API`, `PERSONS_API` switched for the web worker |
 | Review account 1 Oct 2026 | The Supabase user of `podcasteriumsync@gmail.com` was deleted while recording the account-deletion video for Apple; the owner signed in again, the new user is `215f76d5-9390-464e-b84f-e1b7c9cdf76d` (Google only, no Supabase password any more) and has promotional `podcasterium_plus` until 1 Jan 2027 |
 | Shipaton | Deadline extended to **1 Oct 2026, 12:00 PDT**. The app must be public in the US; TestFlight and test tracks do not count. Play 1.0.0 (5) still in review (178 countries) |
+| Shipaton result (13 Oct 2026) | Not selected for a prize (mail from shipaton@revenuecat.com, 13 Oct). Winners announced 20 Oct in New York: 58 apps out of about 3,980 submissions. The entry is on time and eligible for the participant certificate (shipaton.com/certificates). The community showcase apps.shipaton.com (not official, by Perttu Lähteenlahti, no public repository) does not list Podcasterium, most likely because its pages are built from App Store data and the iOS app is not public; on 26 Oct 2026 the owner was given a draft e-mail asking the author to add it from the Play listing |
+| App Store rejection 23 Oct 2026 | 1.0.3 (12) rejected under **2.1(a)**: on an iPad Air 11" (M3) the profile settings items did not respond to taps. Details and next step: [`2026-10-01-app-review-rejection-and-resubmission.md`](2026-10-01-app-review-rejection-and-resubmission.md) §6. The iOS app is still not public (iTunes lookup for id 6815415892 returns 0 results); Play 1.0.0 is live |
 | RevenueCat | products, entitlement `podcasterium_plus`, offering `default`, store credentials for iOS and Android: all done and validated |
 | Core (`feat/podcast-core`) | 6 white-label fixes committed, unpushed; `featuredChannels` on branch `feat/featured-channels` (worktree `~/git/domovinatv/.podcast-core-featured`), not merged |
 

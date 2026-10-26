@@ -89,6 +89,26 @@ Sign in with Apple "Hide My Email" account.
 - **Legal page date** is hard-coded in Croatian ("26. svibnja 2026.") in the
   English UI.
 
+## 6. Later rounds
+
+**9 Oct 2026 — 2.3.10.** 1.0.3 (12) rejected only because the description
+named Android TV and Google Play. Description fixed through the API and
+resubmitted the same day. Rule: iOS metadata never names Android or Google
+Play.
+
+**23 Oct 2026 — 2.1(a), App Completeness.** 1.0.3 (12) rejected again
+(submission `3d19308b`, in review from 05:40 UTC, verdict 06:48 UTC). Review
+device: iPad Air 11-inch (M3), iPadOS 27.0.1. Apple's words: none of the
+sections in the profile settings had any function; tapping "Podcasterium
+Plus" and "Switch to another device" did nothing (screenshot attached in App
+Store Connect). 2.3.10, 5.1.1(v), 2.1(b) and 5.2.3 were not raised.
+
+Not investigated yet. Next step: reproduce on an iPad simulator with build 12
+and with 1.0.4 (13), which is already on TestFlight; suspect an iPad-only
+layout or hit-testing problem in the profile screen (an overlay swallowing
+taps). Fix in core, then resubmit with 1.0.4 or later and say in the review
+notes what was fixed.
+
 ## Related documents
 
 - [`TODO-launch.md`](TODO-launch.md) — launch state table
